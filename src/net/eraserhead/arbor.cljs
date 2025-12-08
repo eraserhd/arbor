@@ -1,13 +1,13 @@
 (ns net.eraserhead.arbor
   (:require
-   [reagent.dom :as rd]
-   [reagent.dom.client :as rdomc]))
+   [reagent.dom.client :as rdc]
+   [re-frame.core :as rf]))
 
-(defonce root (rdomc/create-root (js/document.getElementById "app")))
+(defonce root (rdc/create-root (js/document.getElementById "app")))
 
 (defn- arbor []
   [:ul
    [:li "hello"]])
 
 (defn ^:dev/after-load start []
-  (rdomc/render root [arbor]))
+  (rdc/render root [arbor]))
