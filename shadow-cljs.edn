@@ -13,5 +13,5 @@
  {:app {:target :browser
         :output-dir "public/assets/app/js"
         :asset-path "/assets/app/js"
-        :modules {:main {:entries [net.eraserhead.arbor]
-                         :init-fn net.eraserhead.arbor/start}}}}}
+        :modules {:main {:entries [net.eraserhead.arbor.webui]
+                         :init-fn net.eraserhead.arbor.webui/start}}}}}
