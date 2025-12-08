@@ -8,6 +8,9 @@
  
  :dev-http
  {4242 "public"}
+ 
+ :nrepl
+ {:port 40823}
 
  :builds
  {:app {:target :browser
@@ -15,6 +18,7 @@
         :asset-path "/assets/app/js"
         :modules {:main {:entries [net.eraserhead.arbor.webui]
                          :init-fn net.eraserhead.arbor.webui/start}}}
+
   :test {:target :node-test
          :output-to "target/node-tests.js"
          :autorun true}}}

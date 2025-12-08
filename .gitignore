@@ -1,5 +1,4 @@
 /.direnv
-/.nrepl-port
 /.cpcache
 node_modules/
 /public/js
@@ -17,7 +16,6 @@ pom.xml.asc
 .shadow-cljs
 .idea
 .lein-*
-.nrepl-*
 .DS_Store
 
 .hgignore
