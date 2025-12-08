@@ -1,0 +1,16 @@
+== Arbor
+
+
+== Development
+
+Start the REPLs and build everything.
+
+----
+$ clj -M:dev:shadow-cljs watch app
+----
+
+Run tests:
+
+----
+$ rep '(user/run-tests)'
+----
