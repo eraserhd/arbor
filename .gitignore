@@ -8,6 +8,11 @@ node_modules/
 /checkouts
 /src/gen
 
+/android/build
+/android/.gradle
+/android/.idea
+/android/app/build
+
 pom.xml
 pom.xml.asc
 *.iml
