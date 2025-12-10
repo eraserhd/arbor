@@ -19,20 +19,18 @@
           includeEmulator = false;
         };
       in {
-        devShells = {
-          default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              clojure
-              nodejs
-              jdk21
+        devShells.default = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            clojure
+            nodejs
+            jdk21
 
-              androidComposition.androidsdk
-            ];
-            ANDROID_HOME = "${androidComposition.androidsdk}/libexec/android-sdk";
-            ANDROID_SDK_ROOT = "${androidComposition.androidsdk}/libexec/android-sdk";
-            JAVA_HOME = "${pkgs.jdk21}";
-            GRADLE_OPTS = "-Dorg.gradle.project.android.aapt2FromMavenOverride=${androidComposition.androidsdk}/libexec/android-sdk/build-tools/35.0.0/aapt2";
-          };
+            androidComposition.androidsdk
+          ];
+          ANDROID_HOME = "${androidComposition.androidsdk}/libexec/android-sdk";
+          ANDROID_SDK_ROOT = "${androidComposition.androidsdk}/libexec/android-sdk";
+          JAVA_HOME = "${pkgs.jdk21}";
+          GRADLE_OPTS = "-Dorg.gradle.project.android.aapt2FromMavenOverride=${androidComposition.androidsdk}/libexec/android-sdk/build-tools/35.0.0/aapt2";
         };
     }));
 }
