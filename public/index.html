@@ -9,6 +9,8 @@
         :root {
           --floating-card-color: #1a1a1a;
           --floating-card-border-color: #555;
+          --button-background: #24ac9c;
+          --button-background-hover: color-mix(in srgb, var(--button-background) 90%, white);
         }
 
         * {
@@ -37,16 +39,16 @@
           border-radius: 7pt;
         }
 
+        .floating-card h1 {
+          font-size: 120%;
+          padding-bottom: 10pt;
+        
+        }
+
         .legend {
           float: left;
           /* width: 25%; */
           /* height: 100%; */
-        }
-
-        .legend h1 {
-          font-size: 120%;
-          padding-bottom: 10pt;
-        
         }
 
         .legend li {
@@ -61,10 +63,14 @@
 
         button {
           color: white;
-          background-color: blue;
-          border: solid 1px var(--floating-card-border-color);
+          background-color: var(--button-background);
+          border: none;
           border-radius: 6pt;
           padding: 5pt;
+        }
+
+        button:hover {
+          background-color: var(--button-background-hover);
         }
     </style>
   </head>
