@@ -22,7 +22,7 @@
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             clojure
-            nodejs
+            nodejs_24
             jdk21
 
             androidComposition.androidsdk
