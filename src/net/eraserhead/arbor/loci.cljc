@@ -1,8 +1,6 @@
 (ns net.eraserhead.arbor.loci
- (:refer-clojure :exclude [empty])
  (:require
   [clojure.spec.alpha :as s]))
-
 
 (s/def ::id uuid?)
 (s/def ::name string?)
@@ -14,7 +12,7 @@
 (s/def ::focus (s/nilable ::id))
 (s/def ::db (s/keys :req-un [::focus]))
 
-(def empty
+(def empty-db
   {::loci  {},
    ::focus nil})
 

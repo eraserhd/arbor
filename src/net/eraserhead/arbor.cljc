@@ -3,4 +3,4 @@
    [net.eraserhead.arbor.loci :as loci]))
 
 (def initial-state
-  {::machine-tree loci/empty})
+  {::loci/db loci/empty-db})
