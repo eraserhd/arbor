@@ -2,7 +2,8 @@
   (:require
    [net.eraserhead.arbor.webui.bluetooth :as bt]
    [reagent.dom.client :as rdc]
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   ["@fortawesome/fontawesome-free/js/all.js"]))
 
 (defn- legend []
   [:div.floating-card.legend
@@ -14,8 +15,8 @@
 
 (defn- command-bar []
   [:div.floating-card.command-bar
-   [:button.icon "+"]
-   [:button.icon "s"]])
+   [:button.icon [:i.fa-solid.fa-plus]]
+   [:button.icon [:i.fa-solid.fa-gear]]])
 
 (defn- arbor []
   [:<>
