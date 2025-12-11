@@ -18,10 +18,7 @@
   :shadow-cljs {:extra-deps {thheller/shadow-cljs {:mvn/version "3.3.2"}}
                 :main-opts ["-m" "shadow.cljs.devtools.cli"]}
 
-  :repl {:extra-deps {nrepl/nrepl {:mvn/version "1.3.1"}
-                      cider/cider-nrepl {:mvn/version "0.57.0"}}
-         :main-opts ["-m" "nrepl.cmdline"
-                     "--middleware" "[cider.nrepl/cider-middleware]"
-                     "--interactive"
-                     "--color"]}
-  :run {:exec-fn drw/main}}}
+  :repl {:extra-deps {com.bhauman/rebel-readline-nrepl {:mvn/version "0.1.6"}}
+         :exec-fn rebel-readline.nrepl/connect
+         :exec-args {:host "localhost" :port 40823}}}}
+

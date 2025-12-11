@@ -3,16 +3,23 @@
 
 == Development
 
-Start the REPLs and build everything for debug.
+Start the nREPLs and build everything for debug.
 
 ----
 $ clj -M:dev:shadow-cljs watch app
 ----
 
-Run tests:
+Connect to the REPL:
 
 ----
-$ rep '(refresh) (run-tests)'
+$ clj -T:repl
+----
+
+Run tests:
+
+[source,clojure]
+----
+user=> (refresh) (run-tests)
 ----
 
 Testing on tablet:
