@@ -5,12 +5,12 @@
 (s/def ::id uuid?)
 (s/def ::name string?)
 (s/def ::parent (s/nilable ::id))
-(s/def ::locus (s/keys :req-un [::id ::parent]))
+(s/def ::locus (s/keys :req [::id ::parent]))
 
 (s/def ::loci (s/map-of ::id ::node))
 
 (s/def ::focus (s/nilable ::id))
-(s/def ::db (s/keys :req-un [::focus]))
+(s/def ::db (s/keys :req [::focus]))
 
 (def empty-db
   {::loci  {},

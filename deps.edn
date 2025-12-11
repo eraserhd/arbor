@@ -5,9 +5,9 @@
 
  :aliases
  {:dev {:extra-paths ["dev" "test"]
-        :extra-deps
-        {eftest/eftest {:mvn/version "0.6.0"}
-         org.clojure/tools.namespace {:mvn/version "1.3.0"}}}
+        :extra-deps {eftest/eftest {:mvn/version "0.6.0"}
+                     org.clojure/tools.namespace {:mvn/version "1.3.0"}}
+        :jvm-opts ["-Dclojure.spec.check-asserts=true"]}
 
   :test {:extra-paths ["test"]
          :extra-deps {io.github.cognitect-labs/test-runner
