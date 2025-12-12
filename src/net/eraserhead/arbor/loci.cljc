@@ -16,9 +16,17 @@
     (nil? focus)
     (contains? loci focus)))
 
+(defn- valid-parents? [{:keys [::loci]}]
+  (every?
+   (fn [{:keys [::parent]}]
+     (or (nil? parent)
+         (contains? loci parent)))
+   loci))
+
 (s/def ::db (s/and
              (s/keys :req [::loci ::focus])
-             valid-focus?))
+             valid-focus?
+             valid-parents?))
 
 (def empty-db
   "A db with no loci in it."
@@ -51,5 +59,6 @@
   "Adds a new loci to the db and focuses it."
   [db {:keys [::id], :as locus}]
   {:pre [(s/assert ::db db)
-         (s/assert ::locus locus)]}
+         (s/assert ::locus locus)]
+   :post [(s/assert ::db %)]}
   (update db id (constantly locus)))
