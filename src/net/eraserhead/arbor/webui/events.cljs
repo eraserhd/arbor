@@ -5,6 +5,15 @@
    [net.eraserhead.arbor.webui.storage :as storage]
    [re-frame.core :as rf]))
 
+(rf/reg-fx
+ ::focus-control
+ (fn [id]
+   (js/setTimeout
+    (fn []
+      (when-let [ctl (.getElementById js/document id)]
+        (.focus ctl)))
+    0)))
+
 (rf/reg-event-db
  ::initialize
  (fn [_ _]
@@ -19,13 +28,15 @@
                (storage/store-db db))
              context)))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::new-machine
- (fn [app-db _]
-   (let [new-machine {::loci/id (random-uuid)
-                      ::loci/name "New Machine"
+ (fn [{:keys [db]} _]
+   (let [id          (random-uuid)
+         new-machine {::loci/id     id
+                      ::loci/name   "New Machine"
                       ::loci/parent nil}]
-     (update app-db ::loci/db loci/conj new-machine))))
+     {:db (update db ::loci/db loci/conj new-machine)
+      ::focus-control (str "machine-" id "-name")})))
 
 (rf/reg-event-db
  ::update-machine

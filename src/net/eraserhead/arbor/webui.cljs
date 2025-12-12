@@ -36,7 +36,8 @@
   (let [name-value (r/atom name)]
     (fn machine-card* []
       [:div.machine
-         [:input {:value @name-value
+         [:input {:id (str "machine-" id "-name")
+                  :value @name-value
                   :on-change #(reset! name-value (.. % -target -value))
                   :on-blur #(rf/dispatch [::events/update-machine id ::loci/name @name-value])}]])))
 
