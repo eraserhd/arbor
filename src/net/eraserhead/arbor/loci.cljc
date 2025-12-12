@@ -47,13 +47,13 @@
   "Apply f to the locus in the database with id.
 
   Preserves invariants about focus and order."
-  [db id f & args]
+  [{:keys [::focus], :as db} id f & args]
   {:pre [(s/assert ::db db)
          (s/assert ::id id)]
    :post [(s/assert ::db %)]}
-  (-> db
-    (update-in [::loci id] f)
-    (assoc ::focus id)))
+  (cond-> db
+    true         (update-in [::loci id] f)
+    (nil? focus) (assoc ::focus id)))
 
 (defn conj
   "Adds a new loci to the db and focuses it."

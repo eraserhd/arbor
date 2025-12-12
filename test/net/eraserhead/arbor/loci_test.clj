@@ -10,12 +10,33 @@
       "An empty database should be the only one with no focused locus."))
 
 (deftest t-conj
-  (let [id #uuid "dd5e99e7-5d84-4f29-8ba6-dc403aa5021a",
-        locus {::loci/id id, ::loci/parent nil, ::loci/name "Foo"}
-        singlet (loci/conj loci/empty-db locus)]
-    (is (= id (::loci/id (loci/get singlet id)))
-        "Can retrieve stored loci")
-    (is (= id (::loci/id (loci/focused singlet)))
-        "Added loci is focused")))
+  (testing "adding first loci"
+    (let [id #uuid "dd5e99e7-5d84-4f29-8ba6-dc403aa5021a",
+          locus {::loci/id id, ::loci/parent nil, ::loci/name "Foo"}
+          singlet (loci/conj loci/empty-db locus)]
+      (is (= id (::loci/id (loci/get singlet id)))
+          "Can retrieve stored loci")
+      (is (= id (::loci/id (loci/focused singlet)))
+          "Added loci is focused")))
+  (testing "adding subsequent top-level loci"
+    (let [id1 #uuid "dd5e99e7-5d84-4f29-8ba6-dc403aa5021a",
+          id2 #uuid "36bfbea5-9a6b-47d9-8d92-d3a555ee2410"
+          locus1 {::loci/id id1, ::loci/parent nil, ::loci/name "Foo"}
+          locus2 {::loci/id id2, ::loci/parent nil, ::loci/name "Bar"}
+          db (-> loci/empty-db
+               (loci/conj locus1)
+               (loci/conj locus2))]
+      (is (= {::loci/id id1
+              ::loci/parent nil
+              ::loci/name "Foo"}
+             (loci/get db id1))
+          "locus1 is stored")
+      (is (= {::loci/id id2
+              ::loci/parent nil
+              ::loci/name "Bar"}
+             (loci/get db id2))
+          "locus2 is stored")
+      (is (= id1 (::loci/id (loci/focused db)))
+          "focus did not change after the first conj"))))
+    
   ;; FIXME: adds to top-level query
-  ;; FIXME: adding a child will break the next test, since the focus will not be the top level
