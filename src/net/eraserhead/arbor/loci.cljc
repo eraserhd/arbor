@@ -10,7 +10,15 @@
 
 (s/def ::loci (s/map-of ::id ::locus))
 (s/def ::focus (s/nilable ::id))
-(s/def ::db (s/keys :req [::loci ::focus]))
+
+(defn- valid-focus? [{:keys [::loci ::focus]}]
+  (if (empty? loci)
+    (nil? focus)
+    (contains? loci focus)))
+
+(s/def ::db (s/and
+             (s/keys :req [::loci ::focus])
+             valid-focus?))
 
 (def empty-db
   "A db with no loci in it."
@@ -33,7 +41,8 @@
   Preserves invariants about focus and order."
   [db id f & args]
   {:pre [(s/assert ::db db)
-         (s/assert ::id id)]}
+         (s/assert ::id id)]
+   :post [(s/assert ::db %)]}
   (-> db
     (update-in [::loci id] f)
     (assoc ::focus id)))
