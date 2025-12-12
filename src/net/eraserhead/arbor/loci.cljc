@@ -1,5 +1,5 @@
 (ns net.eraserhead.arbor.loci
- (:refer-clojure :exclude [get update])
+ (:refer-clojure :exclude [conj get update])
  (:require
   [clojure.spec.alpha :as s]))
 
@@ -38,7 +38,7 @@
     (update-in [::loci id] f)
     (assoc ::focus id)))
 
-(defn add-top-level
+(defn conj
   "Adds a new loci to the db and focuses it."
   [db {:keys [::id], :as locus}]
   {:pre [(s/assert ::db db)
