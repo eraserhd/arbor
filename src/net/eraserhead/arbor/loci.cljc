@@ -6,7 +6,7 @@
 (s/def ::id uuid?)
 (s/def ::name string?)
 (s/def ::parent (s/nilable ::id))
-(s/def ::locus (s/keys :req [::id ::name] :opt [::parent]))
+(s/def ::locus (s/keys :req [::id ::name ::parent]))
 
 (s/def ::loci (s/map-of ::id ::locus))
 (s/def ::focus (s/nilable ::id))
