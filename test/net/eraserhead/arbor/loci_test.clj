@@ -39,6 +39,6 @@
              (loci/get db id2))
           "locus2 is stored")
       (is (= id1 (::loci/id (loci/focused db)))
-          "focus did not change after the first conj"))))
-    
-  ;; FIXME: adds to top-level query
+          "focus did not change after the first conj")
+      (is (= #{id1 id2} (into #{} (map ::loci/id) (loci/top-level db)))
+          "all added loci are in the top-level query"))))
