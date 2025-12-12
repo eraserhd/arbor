@@ -15,9 +15,11 @@
           locus {::loci/id id, ::loci/parent nil, ::loci/name "Foo"}
           singlet (loci/conj loci/empty-db locus)]
       (is (= id (::loci/id (loci/get singlet id)))
-          "Can retrieve stored loci")
+          "can retrieve stored loci")
       (is (= id (::loci/id (loci/focused singlet)))
-          "Added loci is focused")))
+          "added loci is focused")
+      (is (= [id] (map ::loci/id (loci/top-level singlet)))
+          "it appears as top-level query")))
   (testing "adding subsequent top-level loci"
     (let [id1 #uuid "dd5e99e7-5d84-4f29-8ba6-dc403aa5021a",
           id2 #uuid "36bfbea5-9a6b-47d9-8d92-d3a555ee2410"

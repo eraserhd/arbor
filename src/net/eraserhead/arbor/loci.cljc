@@ -62,3 +62,9 @@
          (s/assert ::locus locus)]
    :post [(s/assert ::db %)]}
   (update db id (constantly locus)))
+
+(defn top-level
+  "A lazy sequence of top-level nodes, in display order."
+  [{:keys [::loci]}]
+  (->> (vals loci)
+       (filter (comp nil? ::parent))))
