@@ -52,6 +52,8 @@ struct spp_data {
 	long x, y, z;
 };
 
+struct spp_data *spp;
+
 int register_profile(struct spp_data *spp, GDBusProxy *proxy)
 {
 	GVariant *profile;
@@ -193,13 +195,31 @@ on_handle_new_connection (OrgBluezProfile1 *interface,
 	return TRUE;
 }
 
+static gboolean
+readline_callback(GIOChannel *source, GIOCondition condition, gpointer data)
+{
+	if (condition & G_IO_IN) {
+		rl_callback_read_char();
+	}
+	return TRUE;
+}
+
+static void
+line_handler(char *line)
+{
+	if (NULL == line) {
+		g_main_loop_quit(spp->loop);
+		rl_callback_handler_remove();
+		return;
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	GDBusProxy *proxy;
 	GDBusConnection *conn;
 	GError *error = NULL;
 	OrgBluezProfile1 *interface;
-	struct spp_data *spp;	
 
 	spp = g_new0 (struct spp_data, 1);
 
@@ -241,6 +261,11 @@ int main(int argc, char *argv[])
 		printf ("dbus_interface_skeleton_export failed for SPP!\n");
 		return 1;
 	}
+
+	rl_callback_handler_install("droserve> ", line_handler);
+
+	GIOChannel *stdin_channel = g_io_channel_unix_new(STDIN_FILENO);
+	g_io_add_watch(stdin_channel, G_IO_IN, readline_callback, spp->loop);
 
 	g_main_loop_run (spp->loop);
 

@@ -30,7 +30,7 @@
 
           buildPhase = ''
             gcc droserve.c profile1-iface.c -o droserve \
-              -g -Wall -Werror \
+              -g -Wall -Werror -lreadline \
               $(pkg-config --cflags --libs dbus-1) \
               $(pkg-config --cflags --libs dbus-glib-1) \
               $(pkg-config --cflags --libs gio-2.0) \
