@@ -18,6 +18,30 @@
           buildToolsVersions = [ "34.0.0" "35.0.0" ];
           includeEmulator = false;
         };
+
+        droserve = pkgs.stdenv.mkDerivation {
+          pname = "droserve";
+          version = "0.1.0";
+
+          src = ./dev/droserve;
+
+          nativeBuildInputs = with pkgs; [ pkg-config ];
+          buildInputs = with pkgs; [ dbus dbus-glib glib ];
+
+          buildPhase = ''
+            gcc droserve.c profile1-iface.c -o droserve \
+              -g -Wall -Werror \
+              $(pkg-config --cflags --libs dbus-1) \
+              $(pkg-config --cflags --libs dbus-glib-1) \
+              $(pkg-config --cflags --libs gio-2.0) \
+              $(pkg-config --cflags --libs gio-unix-2.0)
+          '';
+
+          installPhase = ''
+            mkdir -p $out/bin
+            cp droserve $out/bin/
+          '';
+        };
       in {
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
@@ -26,6 +50,7 @@
             jdk21
 
             androidComposition.androidsdk
+            droserve
           ];
           ANDROID_HOME = "${androidComposition.androidsdk}/libexec/android-sdk";
           ANDROID_SDK_ROOT = "${androidComposition.androidsdk}/libexec/android-sdk";
