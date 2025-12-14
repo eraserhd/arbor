@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+#include <ctype.h>
 #include <errno.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -207,10 +208,36 @@ readline_callback(GIOChannel *source, GIOCondition condition, gpointer data)
 static void
 line_handler(char *line)
 {
+	char axis = '\0';
+	long value = -1;
+
 	if (NULL == line) {
 		g_main_loop_quit(spp->loop);
 		rl_callback_handler_remove();
 		return;
+	}
+
+	while (isspace(*line)) {
+		line++;
+	}
+	axis = *line;
+	if (!axis) {
+		return;
+	}
+	line++;
+
+	sscanf(line, "%ld", &value);
+
+	switch (axis) {
+	case 'x': case 'X':
+		spp->x = value;
+		break;
+	case 'y': case 'Y':
+		spp->y = value;
+		break;
+	case 'z': case 'Z':
+		spp->z = value;
+		break;
 	}
 }
 
