@@ -26,7 +26,7 @@
           src = ./dev/droserve;
 
           nativeBuildInputs = with pkgs; [ pkg-config ];
-          buildInputs = with pkgs; [ dbus dbus-glib glib ];
+          buildInputs = with pkgs; [ dbus dbus-glib glib readline ];
 
           buildPhase = ''
             gcc droserve.c profile1-iface.c -o droserve \

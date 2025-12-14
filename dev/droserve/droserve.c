@@ -27,6 +27,9 @@
 #include <gio/gio.h>
 #include <gio/gunixfdlist.h>
 
+#include <readline/readline.h>
+#include <readline/history.h>
+
 #include "profile1-iface.h"
 
 #define SERIAL_PORT_PROFILE_UUID "00001101-0000-1000-8000-00805f9b34fb"
