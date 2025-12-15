@@ -32,7 +32,7 @@
           color: #ffffff;
         }
 
-        button:focus, input:focus {
+        button:focus, input:focus, select:focus {
           outline: none;
           box-shadow: 0 0 4px 3px rgba(var(--button-background-rgb), 0.6);
         }
@@ -129,6 +129,17 @@
           padding: 15pt;
           border: solid 1px var(--floating-card-border-color);
           border-radius: 7pt;
+        }
+
+        .settings .machine form {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .settings .machine form label {
+          font-size: 80%;
+          margin-top: 4px;
+          font-weight: bold;
         }
 
         .settings .machine-commands {

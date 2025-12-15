@@ -36,15 +36,22 @@
   (let [name-value (r/atom name)]
     (fn machine-card* []
       [:div.machine
-         [:input {:id (str "machine-" id "-name")
-                  :value @name-value
-                  :on-change #(reset! name-value (.. % -target -value))
-                  :on-blur #(rf/dispatch [::events/update-machine id ::loci/name @name-value])}]
-         (into [:select]
-               (map (fn [{:keys [id name]}]
-                      ^{:key id}
-                      [:option {:value id} name]))
-               @(rf/subscribe [::bt/devices]))])))
+       [:form
+        [:label {:for "name"} "Machine Name"]
+        [:input {:id (str "machine-" id "-name")
+                 :name "name"
+                 :value @name-value
+                 :on-change #(reset! name-value (.. % -target -value))
+                 :on-blur #(rf/dispatch [::events/update-machine id ::loci/name @name-value])}]
+        [:label {:for "device"} "Device"]
+        (into [:select {:name "device"}
+               ^{:key "none"}
+               [:option {:value "none"}
+                "None"]]
+              (map (fn [{:keys [id name]}]
+                     ^{:key id}
+                     [:option {:value id} name]))
+              @(rf/subscribe [::bt/devices]))]])))
 
 (defn- settings-command []
   (let [dialog (r/atom nil)]
