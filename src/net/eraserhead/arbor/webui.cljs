@@ -32,7 +32,7 @@
 (defn- add-datum-command []
   [:button.icon [:i.fa-solid.fa-plus]])
 
-(defn- machine-card [{:keys [::loci/id, ::loci/name]}]
+(defn- machine-card [{:keys [::loci/id, ::loci/name ::loci/device]}]
   (let [name-value (r/atom name)]
     (fn machine-card* []
       [:div.machine
@@ -44,14 +44,18 @@
                  :on-change #(reset! name-value (.. % -target -value))
                  :on-blur #(rf/dispatch [::events/update-machine id ::loci/name @name-value])}]
         [:label {:for "device"} "Device"]
-        (into [:select {:name "device"}
-               ^{:key "none"}
-               [:option {:value "none"}
-                "None"]]
-              (map (fn [{:keys [id name]}]
-                     ^{:key id}
-                     [:option {:value id} name]))
-              @(rf/subscribe [::bt/devices]))]])))
+        (let [current-device-value (or device "none")
+              option               (fn [id text]
+                                     ^{:key id}
+                                     [:option (cond-> {:value id}
+                                                (= id current-device-value) (assoc :selected true))
+                                      text])]
+          (into [:select {:name "device"
+                          :on-change #(rf/dispatch [::events/update-machine id ::loci/device (.. % -target -value)])}
+                 (option "none" "--None--")]
+                (map (fn [{:keys [id name]}]
+                       (option id name)))
+                @(rf/subscribe [::bt/devices])))]])))
 
 (defn- settings-command []
   (let [dialog (r/atom nil)]
