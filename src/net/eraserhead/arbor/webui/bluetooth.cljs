@@ -35,8 +35,8 @@
                                   {:id      "00:00:00:00:00:02"
                                    :name    "TestDRO2"
                                    :address "00:00:00:00:00:02"}]])
-                   ;;FIXME: We need an error flash
-                   (prn error)))))))
+                   (js/alert (str "Unable to retrieve Bluetooth device list: "
+                                  error))))))))
 
 (rf/reg-event-fx
  ::fetch-device-list
