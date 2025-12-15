@@ -1,7 +1,18 @@
 (ns net.eraserhead.arbor.webui.bluetooth
   (:require
    [re-frame.core :as rf]
-   ["@awesome-cordova-plugins/bluetooth-classic-serial-port" :as bt-serial]))
+   ["cordova-plugin-bluetooth-classic-serial-port/src/browser/bluetoothClassicSerial" :as bt-browser]))
+
+
+(def bt-impl (atom bt-browser))
+
+(.addEventListener js/document "deviceready"
+  (fn []
+    (if-let [impl js/bluetoothClassicSerial]
+      (do
+        (js/console.log "found cordova bluetooth serial implementation")
+        (reset! bt-impl js/bluetoothClassicSerial))
+      (js/console.log "using fallback (fake) bluetooth serial implementation"))))
 
 (rf/reg-sub
  ::devices
@@ -17,26 +28,18 @@
 (rf/reg-fx
  ::fetch-device-list
  (fn fetch-device-list* []
-   (-> (.list (.-BluetoothClassicSerialPort bt-serial))
-       (.then (fn [devices]
-                (let [device-list (into []
-                                        (map (fn [device]
-                                               {:id      (.-id device)
-                                                :name    (.-name device)
-                                                :address (.-address device)}))
-                                        devices)]
-                  (rf/dispatch [::device-list-arrived device-list]))))
-       (.catch (fn [error]
-                 (if (= "cordova_not_available" error)
-                   (rf/dispatch [::device-list-arrived
-                                 [{:id      "00:00:00:00:00:01"
-                                   :name    "TestDRO1"
-                                   :address "00:00:00:00:00:01"}
-                                  {:id      "00:00:00:00:00:02"
-                                   :name    "TestDRO2"
-                                   :address "00:00:00:00:00:02"}]])
-                   (js/alert (str "Unable to retrieve Bluetooth device list: "
-                                  error))))))))
+   (.list @bt-impl
+          (fn [devices]
+            (let [device-list (into []
+                                    (map (fn [device]
+                                           {:id      (.-id device)
+                                            :name    (.-name device)
+                                            :address (.-address device)}))
+                                    devices)]
+              (rf/dispatch [::device-list-arrived device-list])))
+          (fn [error]
+            (js/alert (str "Unable to retrieve Bluetooth device list: "
+                           error))))))
 
 (rf/reg-event-fx
  ::fetch-device-list
