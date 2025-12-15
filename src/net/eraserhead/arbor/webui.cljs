@@ -39,13 +39,20 @@
          [:input {:id (str "machine-" id "-name")
                   :value @name-value
                   :on-change #(reset! name-value (.. % -target -value))
-                  :on-blur #(rf/dispatch [::events/update-machine id ::loci/name @name-value])}]])))
+                  :on-blur #(rf/dispatch [::events/update-machine id ::loci/name @name-value])}]
+         (into [:select]
+               (map (fn [{:keys [id name]}]
+                      ^{:key id}
+                      [:option {:value id} name]))
+               @(rf/subscribe [::bt/devices]))])))
 
 (defn- settings-command []
   (let [dialog (r/atom nil)]
     (fn settings-command* []
       [:<>
-       [:button.icon {:on-click #(.showModal @dialog)}
+       [:button.icon {:on-click #(do
+                                   (rf/dispatch [::bt/fetch-device-list])
+                                   (.showModal @dialog))}
         [:i.fa-solid.fa-gear]]
        [:dialog.settings {:ref #(reset! dialog %),
                           :closedby "any"}
