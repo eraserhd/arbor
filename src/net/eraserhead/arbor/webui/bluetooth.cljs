@@ -16,17 +16,14 @@
       (js/console.log "using fallback (fake) bluetooth serial implementation"))))
 
 (rf/reg-sub
- ::devices
- (fn [{:keys [::devices]} _]
+ ::bt/devices
+ (fn [{:keys [::bt/devices]} _]
    devices))
 
-(rf/reg-event-db
- ::device-list-arrived
- (fn [db [_ device-list]]
-   (update db ::devices bt/device-list-arrived device-list)))
+(rf/reg-event-fx ::bt/device-list-arrived bt/device-list-arrived)
 
 (rf/reg-fx
- ::fetch-device-list
+ ::bt/fetch-device-list
  (fn fetch-device-list* []
    (.list @bt-impl
           (fn [devices]
@@ -36,11 +33,11 @@
                                             ::bt/name    (.-name device)
                                             ::bt/address (.-address device)}))
                                     devices)]
-              (rf/dispatch [::device-list-arrived device-list])))
+              (rf/dispatch [::bt/device-list-arrived device-list])))
           (fn [error]
             (js/alert (str "Unable to retrieve Bluetooth device list: " error))))))
 
 (rf/reg-event-fx
- ::fetch-device-list
+ ::bt/fetch-device-list
  (fn [_ _]
-   {::fetch-device-list nil}))
+   {::bt/fetch-device-list nil}))

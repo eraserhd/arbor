@@ -9,11 +9,12 @@
 (s/def ::device (s/keys :req [::id ::name ::address]))
 (s/def ::devices (s/coll-of ::device))
 
-;; When a new device list arrives, add new devices and remove missing devices
-;; from our internal device map, while keeping state of existing devices.
 (defn device-list-arrived
-  [devices device-list]
-  {:pre [(s/assert ::devices device-list)]}
+  "When a new device list arrives, add new devices and remove missing devices
+  from our internal device map, while keeping state of existing devices."
+  [{{:keys [::devices], :as db}, :db} [_ device-list]]
+  {:pre [(s/assert ::devices device-list)]
+   :post [(do (prn ::post %) true)]}
   (let [new-ids (into #{} (map ::id device-list))
         devices (->> devices
                      (remove (fn [[id _]]
@@ -24,4 +25,4 @@
                      (reduce (fn [devices {:keys [::id], :as new-device}]
                                (assoc devices id new-device))
                              {}))]
-    devices))
+    {:db (assoc db ::devices devices)}))

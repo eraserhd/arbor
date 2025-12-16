@@ -2,7 +2,7 @@
   (:require
    [net.eraserhead.arbor.loci :as loci]
    [net.eraserhead.arbor.bluetooth :as bt]
-   [net.eraserhead.arbor.webui.bluetooth :as btui]
+   [net.eraserhead.arbor.webui.bluetooth]
    [net.eraserhead.arbor.webui.events :as events]
    [reagent.core :as r]
    [reagent.dom.client :as rdc]
@@ -65,14 +65,14 @@
                  (option "none" "--None--")]
                 (map (fn [[id {:keys [::bt/name]}]]
                        (option id name)))
-                @(rf/subscribe [::btui/devices])))]])))
+                @(rf/subscribe [::bt/devices])))]])))
 
 (defn- settings-command []
   (let [dialog (r/atom nil)]
     (fn settings-command* []
       [:<>
        [:button.icon {:on-click #(do
-                                   (rf/dispatch [::btui/fetch-device-list])
+                                   (rf/dispatch [::bt/fetch-device-list])
                                    (.showModal @dialog))}
         [:i.fa-solid.fa-gear]]
        [:dialog.settings {:ref #(reset! dialog %),
