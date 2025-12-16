@@ -21,18 +21,19 @@
   {:pre [(s/assert ::db db)
          (s/assert ::device-list device-list)]
    :post [(s/assert ::effects %)]}
-  {:db (update db ::devices (fn [devices]
-                              (let [arrived   (into #{} (map ::id) device-list)
-                                    have      (into #{} (keys devices))
-                                    to-remove (set/difference have arrived)
-                                    devices   (apply dissoc devices to-remove)
+  (let [db' (update db ::devices (fn [devices]
+                                   (let [arrived   (into #{} (map ::id) device-list)
+                                         have      (into #{} (keys devices))
+                                         to-remove (set/difference have arrived)
+                                         devices   (apply dissoc devices to-remove)
 
-                                    updates   (reduce (fn [devices {:keys [::id], :as device}]
-                                                        (assoc devices id device))
-                                                      {}
-                                                      device-list)
-                                    devices   (merge-with merge devices updates)]
-                                (update-vals devices (fn [{:keys [::status],
-                                                           :or {status :disconnected}
-                                                           :as device}]
-                                                       (assoc device ::status status))))))})
+                                         updates   (reduce (fn [devices {:keys [::id], :as device}]
+                                                             (assoc devices id device))
+                                                           {}
+                                                           device-list)
+                                         devices   (merge-with merge devices updates)]
+                                     (update-vals devices (fn [{:keys [::status],
+                                                                :or {status :disconnected}
+                                                                :as device}]
+                                                            (assoc device ::status status))))))]
+    {:db db'}))
