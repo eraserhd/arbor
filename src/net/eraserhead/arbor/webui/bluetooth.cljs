@@ -19,11 +19,23 @@
  (fn [{:keys [::devices]} _]
    devices))
 
+;; When a new device list arrives, add new devices and remove missing devices
+;; from our internal device map, while keeping state of existing devices.
 (rf/reg-event-db
  ::device-list-arrived
  (fn [db [_ device-list]]
-   (prn "got devices:" device-list)
-   (assoc db ::devices device-list)))
+   (let [new-ids (into #{} (map :id device-list))
+         devices (->> (::devices db)
+                      (remove (fn [[id _]]
+                                (not (contains? new-ids id))))
+                      (into {}))
+         devices (->> device-list
+                      (filter (comp new-ids :id))
+                      (reduce (fn [devices {:keys [id], :as new-device}]
+                                (assoc devices id new-device))
+                              {}))]
+    (prn "updated devices map: " devices)
+    (assoc db ::devices devices))))
 
 (rf/reg-fx
  ::fetch-device-list
@@ -38,8 +50,7 @@
                                     devices)]
               (rf/dispatch [::device-list-arrived device-list])))
           (fn [error]
-            (js/alert (str "Unable to retrieve Bluetooth device list: "
-                           error))))))
+            (js/alert (str "Unable to retrieve Bluetooth device list: " error))))))
 
 (rf/reg-event-fx
  ::fetch-device-list

@@ -53,7 +53,7 @@
           (into [:select {:name "device"
                           :on-change #(rf/dispatch [::events/update-machine id ::loci/device (.. % -target -value)])}
                  (option "none" "--None--")]
-                (map (fn [{:keys [id name]}]
+                (map (fn [[id {:keys [name]}]]
                        (option id name)))
                 @(rf/subscribe [::bt/devices])))]])))
 
