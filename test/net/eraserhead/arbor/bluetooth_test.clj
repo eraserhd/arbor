@@ -25,9 +25,10 @@
               ::bt/address "00:00:02"}
              (get devices "00:00:02")))))
   (testing "existing device no longer found"
-    (let [devices (-> (bt/device-list-arrived {:db {"00:00:01" {::bt/id "00:00:01"
-                                                                ::bt/name "Foo"
-                                                                ::bt/address "00:00:01"}}}
+    (let [devices (-> (bt/device-list-arrived {:db {::bt/devices
+                                                    {"00:00:01" {::bt/id "00:00:01"
+                                                                 ::bt/name "Foo"
+                                                                 ::bt/address "00:00:01"}}}}
                                               [::bt/device-list-arrived
                                                [{::bt/id "00:00:02"
                                                  ::bt/name "Bar"
@@ -38,4 +39,16 @@
               ::bt/name "Bar"
               ::bt/status :disconnected
               ::bt/address "00:00:02"}
-             (get devices "00:00:02"))))))
+             (get devices "00:00:02")))))
+  (testing "existing device status is preserved"
+    (let [devices (-> (bt/device-list-arrived {:db {::bt/devices
+                                                    {"00:00:01" {::bt/id "00:00:01"
+                                                                 ::bt/name "Foo"
+                                                                 ::bt/status :connected
+                                                                 ::bt/address "00:00:01"}}}}
+                                              [::bt/device-list-arrived
+                                               [{::bt/id "00:00:01"
+                                                 ::bt/name "Bar"
+                                                 ::bt/address "00:00:01"}]])
+                      (get-in [:db ::bt/devices]))]
+      (is (= :connected (get-in devices ["00:00:01" ::bt/status]))))))

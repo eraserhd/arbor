@@ -1,5 +1,6 @@
 (ns net.eraserhead.arbor.bluetooth
   (:require
+   [clojure.set :as set]
    [clojure.spec.alpha :as s]))
 
 (s/def ::id string?)
@@ -16,18 +17,24 @@
 (defn device-list-arrived
   "When a new device list arrives, add new devices and remove missing devices
   from our internal device map, while keeping state of existing devices."
-  [{{:keys [::devices], :as db}, :db} [_ device-list]]
+  [{:keys [db]} [_ device-list]]
   {:pre [(s/assert ::db db)
          (s/assert ::device-list device-list)]
    :post [(s/assert ::effects %)]}
-  (let [new-ids (into #{} (map ::id device-list))
-        devices (->> devices
-                     (remove (fn [[id _]]
-                               (not (contains? new-ids id))))
-                     (into {}))
-        devices (->> device-list
-                     (filter (comp new-ids ::id))
-                     (reduce (fn [devices {:keys [::id], :as new-device}]
-                               (assoc devices id (assoc new-device ::status :disconnected)))
-                             devices))]
-    {:db (assoc db ::devices devices)}))
+  {:db (update db ::devices (fn [devices]
+                              (let [arrived   (into #{} (map ::id) device-list)
+                                    have      (into #{} (keys devices))
+                                    to-remove (set/difference have arrived)
+                                    additions (->> device-list
+                                                   (reduce (fn [devices {:keys [::id], :as device}]
+                                                             (assoc devices id device))
+                                                           {}))]
+                                (as-> devices $
+                                  (apply dissoc $ to-remove)
+                                  (merge-with merge $ additions)
+                                  (reduce-kv (fn [m id {:keys [::status],
+                                                        :or {status :disconnected}
+                                                        :as device}]
+                                               (assoc m id (assoc device ::status status)))
+                                             {}
+                                             $)))))})
