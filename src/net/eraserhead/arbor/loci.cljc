@@ -13,6 +13,7 @@
 
 ;; Computed values
 (s/def ::children (s/coll-of ::loci))
+(s/def ::origin? boolean?)
 
 (defn- valid-origin? [{:keys [::loci ::origin]}]
   (if (empty? loci)
@@ -76,8 +77,10 @@
   "A lazy sequence of top-level nodes, with ::children, in display order."
   ([db]
    (tree db nil))
-  ([{:keys [::loci], :as db} parent]
+  ([{:keys [::loci ::origin], :as db} parent]
    (->> (vals loci)
         (filter #(= (::parent %) parent))
         (map (fn [{:keys [::id], :as loci}]
-               (assoc loci ::children (tree db id)))))))
+               (assoc loci ::children (tree db id))))
+        (map (fn [{:keys [::id], :as loci}]
+               (assoc loci ::origin? (= id origin)))))))

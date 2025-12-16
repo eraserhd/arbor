@@ -76,9 +76,11 @@
     (is (= [{::loci/id id1
              ::loci/name "Foo"
              ::loci/parent nil
+             ::loci/origin? true
              ::loci/children
              [{::loci/id id2
                ::loci/name "Bar"
                ::loci/parent id1
+               ::loci/origin? false
                ::loci/children []}]}]
            (loci/tree db)))))
