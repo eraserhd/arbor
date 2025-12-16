@@ -20,8 +20,6 @@
  (fn [{:keys [::devices]} _]
    devices))
 
-;; When a new device list arrives, add new devices and remove missing devices
-;; from our internal device map, while keeping state of existing devices.
 (rf/reg-event-db
  ::device-list-arrived
  (fn [db [_ device-list]]
@@ -34,9 +32,9 @@
           (fn [devices]
             (let [device-list (into []
                                     (map (fn [device]
-                                           {:id      (.-id device)
-                                            :name    (.-name device)
-                                            :address (.-address device)}))
+                                           {::bt/id      (.-id device)
+                                            ::bt/name    (.-name device)
+                                            ::bt/address (.-address device)}))
                                     devices)]
               (rf/dispatch [::device-list-arrived device-list])))
           (fn [error]
