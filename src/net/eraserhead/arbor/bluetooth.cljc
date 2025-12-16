@@ -25,16 +25,14 @@
                               (let [arrived   (into #{} (map ::id) device-list)
                                     have      (into #{} (keys devices))
                                     to-remove (set/difference have arrived)
-                                    updates   (->> device-list
-                                                   (reduce (fn [devices {:keys [::id], :as device}]
-                                                             (assoc devices id device))
-                                                           {}))]
-                                (as-> devices $
-                                  (apply dissoc $ to-remove)
-                                  (merge-with merge $ updates)
-                                  (reduce-kv (fn [m id {:keys [::status],
-                                                        :or {status :disconnected}
-                                                        :as device}]
-                                               (assoc m id (assoc device ::status status)))
-                                             {}
-                                             $)))))})
+                                    devices   (apply dissoc devices to-remove)
+
+                                    updates   (reduce (fn [devices {:keys [::id], :as device}]
+                                                        (assoc devices id device))
+                                                      {}
+                                                      device-list)
+                                    devices   (merge-with merge devices updates)]
+                                (update-vals devices (fn [{:keys [::status],
+                                                           :or {status :disconnected}
+                                                           :as device}]
+                                                       (assoc device ::status status))))))})
