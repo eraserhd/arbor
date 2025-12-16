@@ -68,3 +68,9 @@
   [{:keys [::loci]}]
   (->> (vals loci)
        (filter (comp nil? ::parent))))
+
+(defn tree
+  "A lazy sequence of top-level nodes, with ::children, in display order."
+  [{:keys [::loci]}]
+  (->> (vals loci)
+       (filter (comp nil? ::parent))))

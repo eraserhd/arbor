@@ -14,6 +14,13 @@
    (::loci/db app-db)))
 
 (rf/reg-sub
+ ::loci
+ (fn [_ _]
+   [(rf/subscribe [::loci/db])])
+ (fn [loci-db _]
+   (loci/tree loci-db)))
+
+(rf/reg-sub
  ::machines
  (fn [_ _]
    [(rf/subscribe [::loci/db])])
@@ -27,7 +34,7 @@
          (map (fn [{:keys [::loci/id ::loci/name]}]
                 ^{:key (str id)}
                 [:li name]))
-         @(rf/subscribe [::machines]))])
+         @(rf/subscribe [::loci]))])
 
 (defn- add-datum-command []
   [:button.icon [:i.fa-solid.fa-plus]])
