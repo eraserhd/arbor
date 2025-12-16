@@ -1,5 +1,6 @@
 (ns net.eraserhead.arbor.webui.bluetooth
   (:require
+   [net.eraserhead.arbor.bluetooth :as bt]
    [re-frame.core :as rf]
    ["cordova-plugin-bluetooth-classic-serial-port/src/browser/bluetoothClassicSerial" :as bt-browser]))
 
@@ -24,18 +25,7 @@
 (rf/reg-event-db
  ::device-list-arrived
  (fn [db [_ device-list]]
-   (let [new-ids (into #{} (map :id device-list))
-         devices (->> (::devices db)
-                      (remove (fn [[id _]]
-                                (not (contains? new-ids id))))
-                      (into {}))
-         devices (->> device-list
-                      (filter (comp new-ids :id))
-                      (reduce (fn [devices {:keys [id], :as new-device}]
-                                (assoc devices id new-device))
-                              {}))]
-    (prn "updated devices map: " devices)
-    (assoc db ::devices devices))))
+   (update db ::devices bt/update-device-map device-list)))
 
 (rf/reg-fx
  ::fetch-device-list
