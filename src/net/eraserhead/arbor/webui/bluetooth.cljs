@@ -23,7 +23,7 @@
 (rf/reg-event-db
  ::device-list-arrived
  (fn [db [_ device-list]]
-   (update db ::devices bt/update-device-map device-list)))
+   (update db ::devices bt/device-list-arrived device-list)))
 
 (rf/reg-fx
  ::fetch-device-list

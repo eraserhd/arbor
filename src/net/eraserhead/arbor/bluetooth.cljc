@@ -11,7 +11,7 @@
 
 ;; When a new device list arrives, add new devices and remove missing devices
 ;; from our internal device map, while keeping state of existing devices.
-(defn update-device-map
+(defn device-list-arrived
   [devices device-list]
   {:pre [(s/assert ::devices device-list)]}
   (let [new-ids (into #{} (map ::id device-list))
