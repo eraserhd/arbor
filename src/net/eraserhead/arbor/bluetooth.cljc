@@ -37,3 +37,10 @@
                                                                 :as device}]
                                                             (assoc device ::status status))))))]
     {:db db'}))
+
+(defn log-event
+  [db device-id event-type event-data]
+  (let [event {::id device-id
+               ::event-type event-type
+               ::event-data event-data}]
+    (update db ::log (fnil conj []) event)))

@@ -52,3 +52,14 @@
                                                  ::bt/address "00:00:01"}]])
                       (get-in [:db ::bt/devices]))]
       (is (= :connected (get-in devices ["00:00:01" ::bt/status]))))))
+
+(deftest t-log-event
+  (testing "log-event appends events"
+    (let [log (-> {}
+                  (bt/log-event "00:00:01" "set-status" "connected")
+                  (bt/log-event "02:22:22" "received"   "hello, world")
+                  (get ::bt/log))]
+      (is (= [{::bt/id "00:00:01", ::bt/event-type "set-status", ::bt/event-data "connected"}
+              {::bt/id "02:22:22", ::bt/event-type "received", ::bt/event-data "hello, world"}]
+             log)))))
+
