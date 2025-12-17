@@ -2,7 +2,7 @@
   (:require
    [net.eraserhead.arbor.loci :as loci]
    [net.eraserhead.arbor.bluetooth :as bt]
-   [net.eraserhead.arbor.webui.bluetooth]
+   [net.eraserhead.arbor.webui.bluetooth :as btui]
    [net.eraserhead.arbor.webui.events :as events]
    [reagent.core :as r]
    [reagent.dom.client :as rdc]
@@ -41,18 +41,6 @@
 
 (defn- add-datum-command []
   [:button.icon [:i.fa-solid.fa-plus]])
-
-(defn- log-viewer []
-  [:div.floating-card.log
-   [:h1 [:i.fa-solid.fa-ruler-combined] " Device Log"]
-   [:div.log-scroll
-    [:table
-     [:thead
-       [:tr [:th "Device"] [:th "Event"] [:th "Data"]]]
-     (into [:tbody]
-           (map (fn [{:keys [::bt/name ::bt/event-type ::bt/event-data]}]
-                  [:tr [:td name] [:td event-type] [:td [:pre event-data]]]))
-           @(rf/subscribe [::bt/log]))]]])
 
 (defn- device-option [id text]
   ^{:key id}
@@ -111,10 +99,10 @@
         [add-datum-command]
         [:button.icon {:on-click (fn [_]
                                    (swap! log-visible? #(not %)))}
-         [:i.fa-solid.fa-ruler-combined]]
+         btui/device-log-icon]
         [settings-command]]
        (when @log-visible?
-         [log-viewer])])))
+         [btui/log-viewer])])))
 
 (defn- arbor []
   [:<>

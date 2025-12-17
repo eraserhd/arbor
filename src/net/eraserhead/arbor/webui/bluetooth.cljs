@@ -63,9 +63,11 @@
      (-> entry
          (assoc ::bt/name (get-in devices [id ::bt/name]))))))
 
+(def device-log-icon [:i.fa-solid.fa-ruler-combined])
+
 (defn log-viewer []
   [:div.floating-card.log
-   [:h1 [:i.fa-solid.fa-ruler-combined] " Device Log"]
+   [:h1 device-log-icon " Device Log"]
    [:div.log-scroll
     [:table
      [:thead
