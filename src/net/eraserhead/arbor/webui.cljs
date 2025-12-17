@@ -42,30 +42,30 @@
 (defn- add-datum-command []
   [:button.icon [:i.fa-solid.fa-plus]])
 
+(defn- device-option [id text]
+  ^{:key id}
+  [:option {:value id}
+   text])
+
 (defn- machine-card [{:keys [::loci/id, ::loci/name ::loci/device]}]
   (let [name-value (r/atom name)]
     (fn machine-card* []
       [:div.machine
        [:form
         [:label {:for "name"} "Machine Name"]
-        [:input {:id (str "machine-" id "-name")
-                 :name "name"
-                 :value @name-value
+        [:input {:id        (str "machine-" id "-name")
+                 :name      "name"
+                 :value     @name-value
                  :on-change #(reset! name-value (.. % -target -value))
-                 :on-blur #(rf/dispatch [::events/update-machine id ::loci/name @name-value])}]
+                 :on-blur   #(rf/dispatch [::events/update-machine id ::loci/name @name-value])}]
         [:label {:for "device"} "Device"]
-        (let [current-device-value (or device "none")
-              option               (fn [id text]
-                                     ^{:key id}
-                                     [:option (cond-> {:value id}
-                                                (= id current-device-value) (assoc :selected true))
-                                      text])]
-          (into [:select {:name "device"
-                          :on-change #(rf/dispatch [::events/update-machine id ::loci/device (.. % -target -value)])}
-                 (option "none" "--None--")]
-                (map (fn [[id {:keys [::bt/name]}]]
-                       (option id name)))
-                @(rf/subscribe [::bt/devices])))]])))
+        (into [:select {:name          "device"
+                        :default-value (or device "none")
+                        :on-change     #(rf/dispatch [::events/update-machine id ::loci/device (.. % -target -value)])}
+               (device-option "none" "--None--")]
+              (map (fn [[id {:keys [::bt/name]}]]
+                     (device-option id name)))
+              @(rf/subscribe [::bt/devices]))]])))
 
 (defn- settings-command []
   (let [dialog (r/atom nil)]
