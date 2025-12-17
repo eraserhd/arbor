@@ -6,7 +6,20 @@
 
 (def ^:private interface-id "00001101-0000-1000-8000-00805f9b34fb")
 
-(def ^:private bt-impl (atom bt-browser))
+(def ^:private fake-subscribeRawData-reply "X500;Y500;Z500;\n")
+(def ^:private bt-impl
+  (atom
+   (let [fake-impl bt-browser]
+     ;; Browser fake is not plumbed correctly for subscribeRawData
+     (set! (.-subscribeRawData fake-impl)
+           (fn [device-id interface-id success failure]
+             (let [encoder (js/TextEncoder. "ascii")]
+               (js/window.setInterval
+                (fn []
+                  (let [data (.encode encoder fake-subscribeRawData-reply)]
+                    (success data)))
+                500))))
+     fake-impl)))
 
 (.addEventListener js/document "deviceready"
   (fn []
