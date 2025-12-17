@@ -45,13 +45,14 @@
 (defn- log-viewer []
   [:div.floating-card.log
    [:h1 [:i.fa-solid.fa-ruler-combined] " Device Log"]
-   [:table
-    [:thead
-      [:tr [:th "Device"] [:th "Event"] [:th "Data"]]]
-    (into [:tbody]
-          (map (fn [{:keys [::bt/id ::bt/event-type ::bt/event-data]}]
-                 [:tr [:td id] [:td event-type] [:td [:pre event-data]]]))
-          @(rf/subscribe [::bt/log]))]])
+   [:div.log-scroll
+    [:table
+     [:thead
+       [:tr [:th "Device"] [:th "Event"] [:th "Data"]]]
+     (into [:tbody]
+           (map (fn [{:keys [::bt/id ::bt/event-type ::bt/event-data]}]
+                  [:tr [:td id] [:td event-type] [:td [:pre event-data]]]))
+           @(rf/subscribe [::bt/log]))]]])
 
 (defn- device-option [id text]
   ^{:key id}
