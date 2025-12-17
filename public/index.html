@@ -156,11 +156,16 @@
         .log-scroll thead {
           position: sticky;
           top: 0;
-          background: var(--floating-card-color);
+          background: color-mix(in srgb, var(--floating-card-color) 75%, black);
           text-align: left;
         }
 
-        .log-scroll tbody td, th {
+        .log-scroll th {
+          padding-top: 5px;
+          padding-bottom: 5px;
+          padding-left: 5px;
+        }
+        .log-scroll td {
           padding-left: 5px;
         }
 
