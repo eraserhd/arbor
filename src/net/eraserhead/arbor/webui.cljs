@@ -50,8 +50,8 @@
      [:thead
        [:tr [:th "Device"] [:th "Event"] [:th "Data"]]]
      (into [:tbody]
-           (map (fn [{:keys [::bt/id ::bt/event-type ::bt/event-data]}]
-                  [:tr [:td id] [:td event-type] [:td [:pre event-data]]]))
+           (map (fn [{:keys [::bt/name ::bt/event-type ::bt/event-data]}]
+                  [:tr [:td name] [:td event-type] [:td [:pre event-data]]]))
            @(rf/subscribe [::bt/log]))]]])
 
 (defn- device-option [id text]

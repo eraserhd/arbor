@@ -58,8 +58,22 @@
 
 (rf/reg-sub
  ::bt/log
- (fn [{:keys [::bt/log]} _]
-   log))
+ (fn [{:keys [::bt/log ::bt/devices]} _]
+   (for [{:keys [::bt/id], :as entry} log]
+     (-> entry
+         (assoc ::bt/name (get-in devices [id ::bt/name]))))))
+
+(defn log-viewer []
+  [:div.floating-card.log
+   [:h1 [:i.fa-solid.fa-ruler-combined] " Device Log"]
+   [:div.log-scroll
+    [:table
+     [:thead
+       [:tr [:th "Device"] [:th "Event"] [:th "Data"]]]
+     (into [:tbody]
+           (map (fn [{:keys [::bt/name ::bt/event-type ::bt/event-data]}]
+                  [:tr [:td name] [:td event-type] [:td [:pre event-data]]]))
+           @(rf/subscribe [::bt/log]))]]])
 
 (rf/reg-event-db
  ::bt/log-event
