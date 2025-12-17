@@ -74,9 +74,9 @@
               (let [hex-part  (->> cs
                                    (map char-code)
                                    (map hex-byte)
-                                   str/join)
+                                   (str/join " "))
                     text-part (apply str cs)]
-                (str (pad hex-part (dec (* 16 2))) " " text-part))))
+                (str (pad hex-part (dec (* 16 3))) "   " text-part))))
        (str/join "\n")))
 
 (defn log-received
