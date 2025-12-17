@@ -43,6 +43,11 @@
  (fn [_ _]
    {::bt/fetch-device-list nil}))
 
+(rf/reg-sub
+ ::bt/log
+ (fn [{:keys [::bt/log]} _]
+   log))
+
 (rf/reg-event-db
  ::bt/log-event
  (fn [db [_ device-id event-type data]]

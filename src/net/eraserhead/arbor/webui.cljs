@@ -42,6 +42,17 @@
 (defn- add-datum-command []
   [:button.icon [:i.fa-solid.fa-plus]])
 
+(defn- log-viewer []
+  [:div.floating-card.log
+   [:h1 [:i.fa-solid.fa-ruler-combined] " Device Log"]
+   [:table
+    [:thead
+      [:tr [:th "Device"] [:th "Event"] [:th "Data"]]]
+    (into [:tbody]
+          (map (fn [{:keys [::bt/id ::bt/event-type ::bt/event-data]}]
+                 [:tr [:td id] [:td event-type] [:td [:pre event-data]]]))
+          @(rf/subscribe [::bt/log]))]])
+
 (defn- device-option [id text]
   ^{:key id}
   [:option {:value id}
@@ -92,9 +103,17 @@
           [:i.fa-solid.fa-plus]]]]])))
 
 (defn- command-bar []
-  [:div.floating-card.command-bar
-   [add-datum-command]
-   [settings-command]])
+  (let [log-visible? (r/atom false)]
+    (fn []
+      [:<>
+       [:div.floating-card.command-bar
+        [add-datum-command]
+        [:button.icon {:on-click (fn [_]
+                                   (swap! log-visible? #(not %)))}
+         [:i.fa-solid.fa-ruler-combined]]
+        [settings-command]]
+       (when @log-visible?
+         [log-viewer])])))
 
 (defn- arbor []
   [:<>
