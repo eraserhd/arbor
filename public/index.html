@@ -7,11 +7,16 @@
     <title>Arbor</title>
     <style>
         :root {
-          --floating-card-color: #1a1a1a;
-          --floating-card-border-color: #555;
+          --floating-card-color-rgb: 26, 26, 26;
+          --floating-card-color: rgb(var(--floating-card-color-rgb));
 
-          --button-background: rgb(110, 86, 207);
-          --button-background-rgb: 125, 102, 217;
+          --floating-card-border-color-rgb: 80, 80, 80;
+          --floating-card-border-color: rgb(var(--floating-card-border-color-rgb));
+
+          --button-background-rgb: 110, 86, 207;
+          --button-background: rgb(var(--button-background-rgb));
+
+          --button-background-hover-rgb: 125, 102, 217;
           --button-background-hover: rgb(var(--button-background-rgb));
         }
 
@@ -34,7 +39,7 @@
 
         button:focus, input:focus, select:focus {
           outline: none;
-          box-shadow: 0 0 4px 3px rgba(var(--button-background-rgb), 0.6);
+          box-shadow: 0 0 4px 3px rgba(var(--button-background-hover-rgb), 0.6);
         }
 
         ::selection {
@@ -128,7 +133,7 @@
           font-size: 100%;
         }
 
-        .log {
+        .device-log {
           position: fixed;
           display: flex;
           flex-direction: column;
@@ -139,14 +144,20 @@
           transform: translate(-50%, -50%);
         }
 
+        .log-scroll {
+          overflow: auto;
+        }
+
         .log-scroll table {
           width: 100%;
           border-collapse: collapse;
         }
 
-        .log-scroll thead tr {
+        .log-scroll thead {
+          position: sticky;
+          top: 0;
+          background: var(--floating-card-color);
           text-align: left;
-          border-bottom: solid white 1px;
         }
 
         .log-scroll tbody td, th {
@@ -155,18 +166,6 @@
 
         .log-scroll tbody tr:nth-of-type(2n) {
           background: rgba(255, 255, 255, 0.1);
-
-        }
-
-        .log-scroll {
-          overflow: auto;
-        }
-
-
-        .log-scroll th {
-          position: sticky;
-          top: 0;
-          background: var(--floating-card-color);
         }
 
         .settings .machine {
