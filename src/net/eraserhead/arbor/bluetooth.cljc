@@ -38,9 +38,15 @@
                                                             (assoc device ::status status))))))]
     {:db db'}))
 
+(def ^:private max-log-size 100)
 (defn log-event
   [db device-id event-type event-data]
   (let [event {::id device-id
                ::event-type event-type
-               ::event-data event-data}]
-    (update db ::log (fnil conj []) event)))
+               ::event-data event-data}
+        append-log (fn [log event]
+                     (let [log (conj (or log []) event)]
+                       (if (< max-log-size (count log))
+                         (into [] (drop (- (count log) 100) log))
+                         log)))]
+    (update db ::log append-log event)))

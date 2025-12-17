@@ -61,5 +61,10 @@
                   (get ::bt/log))]
       (is (= [{::bt/id "00:00:01", ::bt/event-type "set-status", ::bt/event-data "connected"}
               {::bt/id "02:22:22", ::bt/event-type "received", ::bt/event-data "hello, world"}]
-             log)))))
+             log))))
+  (testing "log-event discards more than 100 events"
+    (let [log (-> (iterate #(bt/log-event % "00:00:01" "recieved" "1234") {})
+                  (nth 405)
+                  (get ::bt/log))]
+      (is (= 100 (count log))))))
 
