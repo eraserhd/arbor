@@ -53,15 +53,18 @@
         append-log (fn [log event]
                      (let [log (conj (or log []) event)]
                        (if (< max-log-size (count log))
-                         (into [] (drop (- (count log) 100) log))
+                         (into [] (drop (- (count log) max-log-size) log))
                          log)))]
     (update db ::log append-log event)))
 
+(defn- char-code [s]
+  #?(:cljs (.charCodeAt s 0)
+     :clj  (int s)))
 (defn- pad [s n]
   (apply str (concat s (repeat (- n (count s)) \space))))
 (defn- hex-char [i]
-  (get "0123456789abcdef" (mod i 16)))
-(defn- hex-int [i]
+  (get "0123456789abcdef" i))
+(defn- hex-byte [i]
   (str (hex-char (quot i 16))
        (hex-char (mod i 16))))
 (defn- format-hex [s]
@@ -69,11 +72,11 @@
        (partition-all 16)
        (map (fn [cs]
               (let [hex-part  (->> cs
-                                   (map int)
-                                   (map hex-int)
-                                   (str/join " "))
+                                   (map char-code)
+                                   (map hex-byte)
+                                   str/join)
                     text-part (apply str cs)]
-                (str (pad hex-part (dec (* 16 3))) "   " text-part))))
+                (str (pad hex-part (dec (* 16 2))) " " text-part))))
        (str/join "\n")))
 
 (defn log-received
