@@ -4,7 +4,8 @@
 
  ;; Use deps.edn
  :dependencies
- []
+ [[reagent/reagent "2.0.1"]
+  [re-frame/re-frame "1.4.3"]]
  
  :dev-http
  {4242 "public"}

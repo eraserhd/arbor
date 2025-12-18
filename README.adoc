@@ -6,7 +6,7 @@
 Start the nREPLs and build everything for debug.
 
 ----
-$ clj -M:dev:shadow-cljs watch app
+$ npx shadow-cljs watch app
 ----
 
 Connect to the REPL:
@@ -25,7 +25,7 @@ user=> (refresh) (run-tests)
 Testing on tablet:
 
 ----
-$ clj -M:shadow-cljs release app
+$ npx shadow-cljs release app
 $ npx cap run android
 ----
 
