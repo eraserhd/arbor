@@ -6,6 +6,7 @@
 Start the nREPLs and build everything for debug.
 
 ----
+$ npm install
 $ npx shadow-cljs watch app
 ----
 
