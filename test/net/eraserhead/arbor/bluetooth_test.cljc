@@ -76,3 +76,13 @@
       (is (= (str "48 65 6c 6c 6f 2c 20 77 6f 72 6c 64 21 20 20 54   Hello, world!  T\n"
                   "68 69 73 20 69 73 20 61 20 74 65 73 74 2e 0a      his is a test..")
              data)))))
+
+(deftest t-process-recieved
+  (testing ""
+    (let [db (-> {::bt/devices {"00:00:01" {}}}
+                 (bt/process-received "00:00:01" "X150;Y250;Z350;T72;\n"))]
+      (is (= {::bt/devices {"00:00:01" {::bt/axes {"X" 150
+                                                   "Y" 250
+                                                   "Z" 350
+                                                   "T" 72}}}}
+             db)))))

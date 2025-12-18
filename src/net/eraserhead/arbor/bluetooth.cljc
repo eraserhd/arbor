@@ -90,3 +90,18 @@
   "Log received data in hex format."
   [db device-id event-data]
   (log-event db device-id "received" (format-hex event-data)))
+
+(defn process-received
+  [db device-id event-data]
+  (let [to-process         (-> (str (get-in db [::devices device-id ::receive-buffer] "")
+                                    event-data)
+                               (str/replace #"[;\s]+" ";"))
+        [to-process items] (loop [to-process to-process
+                                  items      {}]
+                             (if-let [[_ axis value-str left] (re-matches #"^([a-zA-Z])(-?\d+(?:\.\d*)?);(.*)" to-process)]
+                               (recur left (assoc items axis (* value-str 1.0)))
+                               [to-process items]))]
+    (reduce (fn [db [axis value]]
+              (assoc-in db [::devices device-id ::axes axis] value))
+            db
+            items)))
