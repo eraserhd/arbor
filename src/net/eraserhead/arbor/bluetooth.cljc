@@ -45,16 +45,17 @@
     {:db db'}))
 
 (def ^:private max-log-size 100)
+(defn- append-log
+  [log event]
+  (let [log (conj (or log []) event)]
+    (if (< max-log-size (count log))
+      (into [] (drop (- (count log) max-log-size) log))
+      log)))
 (defn log-event
   [db device-id event-type event-data]
   (let [event {::id device-id
                ::event-type event-type
-               ::event-data event-data}
-        append-log (fn [log event]
-                     (let [log (conj (or log []) event)]
-                       (if (< max-log-size (count log))
-                         (into [] (drop (- (count log) max-log-size) log))
-                         log)))]
+               ::event-data event-data}]
     (update db ::log append-log event)))
 
 (defn- char-code [s]
