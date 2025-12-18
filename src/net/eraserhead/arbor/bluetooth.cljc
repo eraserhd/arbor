@@ -52,6 +52,7 @@
       (into [] (drop (- (count log) max-log-size) log))
       log)))
 (defn log-event
+  "Append a log to the device log, removing older events as necessary."
   [db device-id event-type event-data]
   (let [event {::id device-id
                ::event-type event-type
@@ -86,5 +87,6 @@
        (str/join "\n")))
 
 (defn log-received
+  "Log received data in hex format."
   [db device-id event-data]
   (log-event db device-id "received" (format-hex event-data)))
