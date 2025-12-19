@@ -6,7 +6,7 @@
 
 (def ^:private interface-id "00001101-0000-1000-8000-00805f9b34fb")
 
-(def ^:private fake-subscribeRawData-reply "X500;Y500;Z500;\n")
+(def ^:private ^:dynamic fake-subscribeRawData-reply "X500;Y500;Z500;\n")
 (def ^:private bt-impl
   (atom
    (let [fake-impl bt-browser]
