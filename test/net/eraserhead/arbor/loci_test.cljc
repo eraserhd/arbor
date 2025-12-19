@@ -84,3 +84,13 @@
                ::loci/origin? false
                ::loci/children []}]}]
            (loci/tree db)))))
+
+(deftest t-origin-stack
+  (let [id1    #uuid "dd5e99e7-5d84-4f29-8ba6-dc403aa5021a",
+        locus1 {::loci/id id1, ::loci/parent nil, ::loci/name "Foo"}
+        db     (-> loci/empty-db
+                 (loci/conj locus1))]
+    (is (= [{::loci/id id1
+             ::loci/name "Foo"
+             ::loci/parent nil}]
+           (loci/origin-stack db)))))

@@ -84,3 +84,11 @@
                (assoc loci ::children (tree db id))))
         (map (fn [{:keys [::id], :as loci}]
                (assoc loci ::origin? (= id origin)))))))
+
+(defn origin-stack
+  "A list of ancestors of the origin node, inclusive."
+  [{:keys [::origin ::loci], :as db}]
+  {:pre [(s/assert ::db db)]}
+  (->> (iterate (comp loci ::parent) (loci origin))
+       (take-while some?)
+       reverse))
