@@ -1,8 +1,2 @@
 {:paths ["src" "resources"]
- :deps {org.clojure/clojure {:mvn/version "1.12.1"}}
-
- :aliases
- {:repl {:extra-deps {com.bhauman/rebel-readline-nrepl {:mvn/version "0.1.6"}}
-         :exec-fn rebel-readline.nrepl/connect
-         :exec-args {:host "localhost" :port 40823}}}}
-
+ :deps {org.clojure/clojure {:mvn/version "1.12.1"}}}
