@@ -6,7 +6,6 @@
    [net.eraserhead.arbor.webui.bluetooth :as btui]
    [net.eraserhead.arbor.webui.events :as events]
    [net.eraserhead.arbor.webui.loci :as lociui]
-   [net.eraserhead.arbor.webui.scale :as scaleui]
    [reagent.core :as r]
    [reagent.dom.client :as rdc]
    [re-frame.core :as rf]
@@ -119,10 +118,10 @@
         [add-datum-command]
         [:button.icon {:on-click (fn [_]
                                    (swap! log-visible? #(not %)))}
-         scaleui/device-log-icon]
+         lociui/device-log-icon]
         [settings-command]]
        (when @log-visible?
-         [scaleui/device-log])])))
+         [lociui/device-log])])))
 
 (defn- arbor []
   [:<>
