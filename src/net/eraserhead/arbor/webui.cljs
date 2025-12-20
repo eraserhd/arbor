@@ -5,6 +5,7 @@
    [net.eraserhead.arbor.webui.bluetooth :as btui]
    [net.eraserhead.arbor.webui.events :as events]
    [net.eraserhead.arbor.webui.loci :as lociui]
+   [net.eraserhead.arbor.webui.scale :as scaleui]
    [reagent.core :as r]
    [reagent.dom.client :as rdc]
    [re-frame.core :as rf]

@@ -29,13 +29,6 @@
         (reset! bt-impl js/bluetoothClassicSerial))
       (js/console.log "using fallback (fake) bluetooth serial implementation"))))
 
-(rf/reg-sub
- ::scale/devices
- (fn [{:keys [::scale/devices]} _]
-   devices))
-
-(rf/reg-event-fx ::scale/device-list-arrived scale/device-list-arrived)
-
 (rf/reg-fx
  ::fetch-device-list
  (fn fetch-device-list* []
@@ -56,13 +49,6 @@
  (fn [_ _]
    {::fetch-device-list nil}))
 
-(rf/reg-sub
- ::scale/log
- (fn [{:keys [::scale/log ::scale/devices]} _]
-   (for [{:keys [::scale/id], :as entry} log]
-     (-> entry
-         (assoc ::scale/name (get-in devices [id ::scale/name]))))))
-
 (def device-log-icon [:i.fa-solid.fa-ruler-combined])
 
 (defn device-log []
@@ -76,23 +62,6 @@
            (map (fn [{:keys [::scale/name ::scale/event-type ::scale/event-data]}]
                   [:tr [:td name] [:td event-type] [:td [:pre event-data]]]))
            @(rf/subscribe [::scale/log]))]]])
-
-(rf/reg-event-db
- ::scale/log-event
- (fn [db [_ device-id event-type data]]
-   (scale/log-event db device-id event-type data)))
-
-(rf/reg-event-db
- ::scale/process-received
- (fn [db [_ device-id data]]
-   (scale/process-received db device-id data)))
-
-(rf/reg-event-db
- ::scale/set-status
- (fn [db [_ device-id status]]
-   (-> db
-     (assoc-in [::scale/devices device-id ::scale/status] status)
-     (scale/log-event device-id "set-status" status))))
 
 (def ^:private decoder (js/TextDecoder. "ascii"))
 
