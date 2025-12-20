@@ -24,6 +24,8 @@
 (s/def ::log-event (s/keys :req [::id ::event-type ::event-data]))
 (s/def ::log (s/coll-of ::log-event))
 
+(def empty-devices {})
+
 (defn device-list-arrived
   "When a new device list arrives, add new devices and remove missing devices
   from our internal device map, while keeping state of existing devices."

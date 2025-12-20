@@ -29,14 +29,15 @@
    loci))
 
 (s/def ::db (s/and
-             (s/keys :req [::loci ::origin])
+             (s/keys :req [::loci ::origin ::scale/devices])
              valid-origin?
              valid-parents?))
 
 (def empty-db
   "A db with no loci in it."
   {::loci  {},
-   ::origin nil})
+   ::origin nil
+   ::scale/devices scale/empty-devices})
 
 (defn get
   "Retrieves a loci from the db by id."
