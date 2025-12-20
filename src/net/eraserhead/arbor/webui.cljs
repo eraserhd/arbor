@@ -57,7 +57,7 @@
                    [:div.axis
                     [:div.name axis-name]
                     [:div.value axis-value]
-                    [:button.icon [:i.fa-solid.fa-location-pin]]]))
+                    [:button.icon [:i.fa-solid.fa-location-dot]]]))
             axes))))
 
 (defn- add-datum-command []
