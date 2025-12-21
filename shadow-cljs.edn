@@ -10,8 +10,8 @@
  {:app {:target :browser
         :output-dir "public/assets/app/js"
         :asset-path "/assets/app/js"
-        :modules {:main {:entries [net.eraserhead.arbor.webui]
-                         :init-fn net.eraserhead.arbor.webui/start}}}
+        :modules {:main {:entries [cadro.main]
+                         :init-fn cadro.main/start}}}
 
   :test {:target :browser-test
          :test-dir "target/browser-test"
