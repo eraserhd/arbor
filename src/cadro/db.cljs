@@ -1,8 +1,7 @@
 (ns cadro.db
   (:require
    [datascript.core :as d]
-   [posh.reagent :as p]))
+   [re-posh.core :as re-posh]))
 
 (def conn (d/create-conn))
-(p/posh! conn)
-(js/console.log "registered with posh!")
+(re-posh/connect! conn)
