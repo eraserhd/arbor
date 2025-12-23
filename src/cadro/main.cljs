@@ -1,7 +1,7 @@
 (ns cadro.main
   (:require
    [cadro.db]
-   [cadro.legend]
+   [cadro.ui.legend]
    [clojure.spec.alpha :as s]
    [reagent.dom.client :as rdc]))
 
@@ -11,4 +11,4 @@
   (when ^boolean goog.DEBUG
     (s/check-asserts true))
   (rdc/render root
-              [cadro.legend/legend]))
+              [cadro.ui.legend/legend]))
