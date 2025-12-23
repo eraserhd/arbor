@@ -7,6 +7,7 @@
    [re-posh.core :as re-posh]
    ["@fortawesome/fontawesome-free/js/all.js"]))
 
+
 (re-posh/reg-sub
  ::loci-tree
  (fn [_ _]
@@ -29,6 +30,12 @@
      ::object/display-name "New Machine"
      ::locus/offset        {"x" 42}}]))
 
+(def new-machine-icon [:i.fa-solid.fa-plug-circle-plus])
+(defn new-machine-button []
+  [:button.icon.new-machine
+   {:on-click #(rf/dispatch [::new-machine])}
+   new-machine-icon])
+
 (defn legend-key [eid]
   (let [{:keys [::object/id ::object/display-name]} @(re-posh/subscribe [::locus eid])]
     [:li display-name]))
@@ -41,6 +48,4 @@
                 ^{:key (str dbid)}
                 [legend-key dbid]))
          @(re-posh/subscribe [::loci-tree]))
-   [:button.icon.new-machine
-    {:on-click #(rf/dispatch [::new-machine])}
-    [:i.fa-solid.fa-plug-circle-plus]]])
+   [new-machine-button]])
