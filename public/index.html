@@ -59,7 +59,12 @@
         .floating-card h1 {
           font-size: 120%;
           padding-bottom: 10pt;
-        
+        }
+
+        .floating-card .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
         }
 
         .locus-edit-panel {
@@ -81,17 +86,6 @@
           margin-top: 4px;
           font-weight: bold;
         }
-
-/*
-        .settings .machine {
-          margin: 5pt 0 5pt 0;
-          padding: 15pt;
-          border: solid 1px var(--floating-card-border-color);
-          border-radius: 7pt;
-        }
-
-
-*/
 
         .axes {
           right: 0;
@@ -137,17 +131,27 @@
         }
 
         button {
+          border: none;
+        }
+
+        button.close {
+          color: var(--button-background);
+          background: none;
+          font-size: 125%;
+        }
+
+        button.close:hover {
+          color: var(--button-background-hover);
+        }
+
+        button.icon {
           color: white;
           background-color: var(--button-background);
-          border: none;
           border-radius: 5pt;
           padding: 5pt;
           height: 30px;
           margin-left: 2px;
           margin-right: 2px;
-        }
-
-        button.icon {
           width: 30px;
           align-items: center;
           justify-content: center;
@@ -155,7 +159,7 @@
           padding-bottom: 4pt;
         }
 
-        button:hover {
+        button.icon:hover {
           background-color: var(--button-background-hover);
         }
 

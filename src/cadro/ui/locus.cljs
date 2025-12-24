@@ -12,7 +12,11 @@
   (fn []
     (when-let [eid @locus-to-edit]
       [:div.floating-card.locus-edit-panel
-       [:h1 "Edit Locus"]
+       [:div.header
+        [:h1 "Edit Locus"]
+        [:button.close
+         {:on-click #(reset! locus-to-edit nil)}
+         [:i.fa-solid.fa-xmark]]]
        [:form
         [:label {:for "display_name"}
          "Display Name"]
