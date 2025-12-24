@@ -6,3 +6,10 @@
 
 (s/def ::id uuid?)
 (s/def ::display-name string?)
+
+(def schema
+  {::id
+   {:db/cardinality :db.cardinality/one
+    :db/unique      :db.unique/identity}
+   ::display-name
+   {:db/cardinality :db.cardinality/one}})
