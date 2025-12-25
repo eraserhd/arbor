@@ -13,6 +13,7 @@
   (fn []
     (when-let [eid @locus-to-edit]
       [panel/panel {:title "Edit Locus"
+                    :class "locus-edit-panel"
                     :on-close #(reset! locus-to-edit nil)}
        [:label {:for "display_name"}
         "Display Name"]

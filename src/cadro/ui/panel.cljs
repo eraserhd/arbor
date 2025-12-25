@@ -1,11 +1,13 @@
 (ns cadro.ui.panel)
 
+(def close-icon [:i.fa-solid.fa-xmark])
+
 (defn panel
-  [{:keys [title on-close]} & content]
-  [:div.floating-card.locus-edit-panel
+  [{:keys [title on-close class]} & content]
+  [:div.floating-card {:class class}
    [:div.header
     [:h1 title]
     [:button.close
      {:on-click #(on-close)}
-     [:i.fa-solid.fa-xmark]]]
+     close-icon]]
    (into [:form] content)])
