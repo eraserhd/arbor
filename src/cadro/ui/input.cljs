@@ -27,13 +27,13 @@
        (name attr)))
 
 (defn label
-  [eid attr text]
+  [{:keys [eid attr label]}]
   [:label {:for (control-name eid attr)}
-   text])
+   label])
 
 (defn input
   "Input element for an object attribute in the datastore."
-  [eid attr]
+  [{:keys [eid attr]}]
   (let [value (re-posh/subscribe [::value eid attr])]
     (fn []
       [:input {:id (control-name eid attr)

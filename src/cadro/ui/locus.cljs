@@ -15,8 +15,11 @@
       [panel/panel {:title "Edit Locus"
                     :class "locus-edit-panel"
                     :on-close #(reset! locus-to-edit nil)}
-       [input/label eid ::object/display-name "Display Name"]
-       [input/input eid ::object/display-name]])))
+       [input/label {:eid eid
+                     :attr ::object/display-name
+                     :label "Display Name"}]
+       [input/input {:eid  eid
+                     :attr ::object/display-name}]])))
 
 (rf/reg-fx
  ::edit
