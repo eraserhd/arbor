@@ -19,15 +19,24 @@
 
 (defn control-name
   "Derive the name for a form control from its database attribute."
-  [attr]
-  (str (namespace attr) "__" (name attr)))
+  [eid attr]
+  (str (str eid)
+       "/"
+       (namespace attr)
+       "/"
+       (name attr)))
+
+(defn label
+  [eid attr text]
+  [:label {:for (control-name eid attr)}
+   text])
 
 (defn input
   "Input element for an object attribute in the datastore."
   [eid attr]
   (let [value (re-posh/subscribe [::value eid attr])]
     (fn []
-      [:input {:name (control-name attr)
+      [:input {:id (control-name eid attr)
                :default-value @value
                :on-blur (fn [e]
                           (let [value (.. e -target -value)]
