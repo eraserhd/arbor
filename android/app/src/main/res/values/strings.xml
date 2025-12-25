@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">arbor</string>
-    <string name="title_activity_main">arbor</string>
-    <string name="package_name">net.eraserhead.arbor</string>
-    <string name="custom_url_scheme">net.eraserhead.arbor</string>
+    <string name="app_name">Cadro</string>
+    <string name="title_activity_main">Cadro</string>
+    <string name="package_name">net.eraserhead.cadro</string>
+    <string name="custom_url_scheme">net.eraserhead.cadro</string>
 </resources>

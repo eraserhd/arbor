@@ -1,4 +1,4 @@
-package net.eraserhead.arbor;
+package net.eraserhead.cadro;
 
 import com.getcapacitor.BridgeActivity;
 

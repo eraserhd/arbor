@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace = "net.eraserhead.arbor"
+    namespace = "net.eraserhead.cadro"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "net.eraserhead.arbor"
+        applicationId "net.eraserhead.cadro"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
