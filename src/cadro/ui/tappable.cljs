@@ -7,8 +7,10 @@
   [{:keys [on-tap on-press]} & args]
   (let [button-ref (atom nil)]
     (r/create-class
-      {:reagent-render
-       (fn []
+      {:display-name "tappable"
+
+       :reagent-render
+       (fn [{:keys [on-tap on-press]} & args]
          (into [:button {:ref #(reset! button-ref %)}]
                args))
 
