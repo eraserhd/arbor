@@ -1,7 +1,6 @@
 (ns cadro.ui.panel
   (:require
    [reagent.core :as r]
-   [reagent.dom.client :as rdc]
    ["hammerjs" :as Hammer]))
 
 (def close-icon [:i.fa-solid.fa-xmark])
