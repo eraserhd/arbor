@@ -2,6 +2,7 @@
   (:require
    [cadro.model.object :as object]
    [cadro.ui.input :as input]
+   [cadro.ui.panel :as panel]
    [reagent.core :as ra]
    [re-frame.core :as rf]
    [re-posh.core :as re-posh]))
@@ -11,16 +12,11 @@
 (defn edit-panel []
   (fn []
     (when-let [eid @locus-to-edit]
-      [:div.floating-card.locus-edit-panel
-       [:div.header
-        [:h1 "Edit Locus"]
-        [:button.close
-         {:on-click #(reset! locus-to-edit nil)}
-         [:i.fa-solid.fa-xmark]]]
-       [:form
-        [:label {:for "display_name"}
-         "Display Name"]
-        [input/input eid ::object/display-name]]])))
+      [panel/panel {:title "Edit Locus"
+                    :on-close #(reset! locus-to-edit nil)}
+       [:label {:for "display_name"}
+        "Display Name"]
+       [input/input eid ::object/display-name]])))
 
 (rf/reg-fx
  ::edit
