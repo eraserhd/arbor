@@ -13,3 +13,8 @@
   "Transact data to the db."
   [& args]
   (apply d/transact db/*conn* args))
+
+(defn entity
+  "Retrieve and entity."
+  [eid]
+  (d/touch (d/entity @db/*conn* eid)))
