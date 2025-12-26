@@ -9,7 +9,10 @@
 (defn panel
   [{:keys [title on-close class]} & content]
   [cadro.ui.keys/keys {:on-keys {"Escape" on-close}}
-   [gestures/wrap {:on-swipedown on-close}
+   [gestures/wrap {:on-swipedown (fn []
+                                   (when-let [active-element js/document.activeElement]
+                                     (.blur active-element))
+                                   (on-close))}
     [:div.floating-card {:class class}
      [:div.header
       [:h1 title]
