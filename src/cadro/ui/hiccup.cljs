@@ -13,9 +13,9 @@
      (and (nil? props) (nil? more)) [tag {}]
      :else                          (into [tag {} props] more))))
 
-(defn wrap-content
-  [props content]
-  (if-let [[tag existing-props & body] (normalize1 content)]
+(defn merge-props
+  "Merge props into a hiccup form's existing props (which could be omitted)."
+  [content props]
+  (let [[tag existing-props & body] (normalize1 content)]
     (into [tag (r/merge-props existing-props props)]
-          body)
-    content))
+          body)))
