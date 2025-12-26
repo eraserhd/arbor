@@ -26,6 +26,19 @@
   [{:keys [db-after]}]
   (.setItem js/localStorage "db" (js/JSON.stringify (d/serializable db-after))))
 
+(defn- load-from-localStorage
+  "Rehydrates DataScript db from localStorage.
+
+  Returns nil if it cannot."
+  []
+  (when-let [conn (some-> js/localStorage
+                    (.getItem "db")
+                    js/JSON.parse
+                    d/from-serializable
+                    d/conn-from-db)]
+    (d/reset-schema! conn (schema))
+    conn))
+
 (defn connect!
   "Creates a database connection with all registered schema.
 
@@ -33,7 +46,8 @@
   in debug mode."
   []
   (when-not *conn*
-    (let [conn (d/create-conn (schema))]
+    (let [conn (or (load-from-localStorage)
+                   (d/create-conn (schema)))]
       (re-posh/connect! conn)
       (d/listen! conn :persist-to-localStorage persist-to-localStorage)
       (set! *conn* conn)))
