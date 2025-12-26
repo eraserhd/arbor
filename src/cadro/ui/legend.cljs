@@ -3,8 +3,8 @@
    [cadro.db :as db]
    [cadro.model.locus :as locus]
    [cadro.model.object :as object]
+   [cadro.ui.gestures :as gestures]
    [cadro.ui.locus :as locusui]
-   [cadro.ui.tappable :as tappable]
    [re-frame.core :as rf]
    [re-posh.core :as re-posh]
    ["@fortawesome/fontawesome-free/js/all.js"]))
@@ -48,10 +48,9 @@
 (defn legend-key [eid]
   (let [{:keys [::object/id ::object/display-name]} @(re-posh/subscribe [::locus eid])]
     ^{:key (str id)}
-    [:li [tappable/tappable {:on-tap #(println "tapped")
-                             :on-press
-                             #(rf/dispatch [::edit-locus [::object/id id]])}
-          display-name]]))
+    [:li [gestures/wrap {:on-tap #(println "tapped")
+                         :on-press #(rf/dispatch [::edit-locus [::object/id id]])}
+          [:button display-name]]]))
 
 (defn legend []
   [:div.floating-card.legend

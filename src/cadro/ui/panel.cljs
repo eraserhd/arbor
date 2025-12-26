@@ -13,7 +13,7 @@
     (r/create-class
      {:reagent-render
       (fn [{:keys [title on-close class]} & content]
-        [hammer/wrap {:on-swipedown on-close}
+        [gestures/wrap {:on-swipedown on-close}
          [:div.floating-card {:class class}
           [:div.header
            [:h1 title]
