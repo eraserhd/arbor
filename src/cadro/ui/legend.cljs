@@ -32,6 +32,11 @@
      {:transact tx
       ::locusui/edit id})))
 
+(re-posh/reg-event-ds
+ ::set-reference
+ (fn [ds [_ eid]]
+   (locus/set-reference-tx eid)))
+
 (re-posh/reg-event-fx
  ::edit-locus
  (fn [_ [_ eid]]
@@ -46,7 +51,7 @@
 (defn legend-key [eid]
   (let [{:keys [::object/id ::object/display-name]} @(re-posh/subscribe [::locus eid])]
     ^{:key (str id)}
-    [:li [gestures/wrap {:on-tap #(println "tapped")
+    [:li [gestures/wrap {:on-tap #(rf/dispatch [::set-reference [::object/id id]])
                          :on-press #(rf/dispatch [::edit-locus [::object/id id]])}
           [:button display-name]]]))
 
