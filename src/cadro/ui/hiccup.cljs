@@ -1,4 +1,5 @@
 (ns cadro.ui.hiccup
+  "Utilities for working with hiccup forms."
   (:require
    [reagent.core :as r]))
 
@@ -6,8 +7,8 @@
   "Ensures hiccup is in the form [head props & rest], even if props is empty.
 
   Not recursive."
-  [content]
-  (let [[tag props & more] content]
+  [form]
+  (let [[tag props & more] form]
     (cond
      (map? props)                   (into [tag props] more)
      (and (nil? props) (nil? more)) [tag {}]
@@ -15,7 +16,7 @@
 
 (defn merge-props
   "Merge props into a hiccup form's existing props (which could be omitted)."
-  [content props]
-  (let [[tag existing-props & body] (normalize1 content)]
+  [form props]
+  (let [[tag existing-props & body] (normalize1 form)]
     (into [tag (r/merge-props existing-props props)]
           body)))
