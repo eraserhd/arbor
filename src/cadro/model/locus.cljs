@@ -1,9 +1,10 @@
 (ns cadro.model.locus
   (:require
+   [cadro.db :as db]
    [cadro.model.object :as object]
    [clojure.spec.alpha :as s]))
 
-(def spec
+(db/register-schema!
   {::origin {:db/valueType :db.type/ref
              :db/cardinality :db.cardinality/one}})
 
