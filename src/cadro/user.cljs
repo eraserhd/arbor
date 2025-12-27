@@ -1,6 +1,7 @@
 (ns ^:dev/always cadro.user
   (:require
    [cadro.db :as db]
+   [cadro.model.locus :as locus]
    [cljs.repl :refer [doc apropos source]]
    [datascript.core :as d]))
 
