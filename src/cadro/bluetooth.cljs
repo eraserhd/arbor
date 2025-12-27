@@ -1,6 +1,8 @@
 (ns cadro.bluetooth
   (:require
    [cadro.model.object :as object]
+   [cadro.model.scale-controller :as scale-controller]
+   [re-posh.core :as re-posh]
    [re-frame.core :as rf]
    ["cordova-plugin-bluetooth-classic-serial-port/src/browser/bluetoothClassicSerial" :as bt-browser]))
 
@@ -29,25 +31,30 @@
         (reset! bt-impl js/bluetoothClassicSerial))
       (js/console.log "using fallback (fake) bluetooth serial implementation"))))
 
-;(rf/reg-fx
-; ::fetch-device-list
-; (fn fetch-device-list* []
-;   (.list @bt-impl
-;          (fn [devices]
-;            (let [device-list (into []
-;                                    (map (fn [device]
-;                                           {::scale/id      (.-id device)
-;                                            ::scale/name    (.-name device)
-;                                            ::scale/address (.-address device)}))
-;                                    devices)]
-;              (rf/dispatch [::scale/device-list-arrived device-list])))
-;          (fn [error]
-;            (js/alert (str "Unable to retrieve Bluetooth device list: " error))))))
+(re-posh/reg-event-ds
+ ::device-list-arrived
+ (fn [ds [_ device-list]]
+   device-list))
 
-;(rf/reg-event-fx
-; ::fetch-device-list
-; (fn [_ _]
-;   {::fetch-device-list nil}))
+(rf/reg-fx
+ ::fetch-device-list
+ (fn fetch-device-list* []
+   (.list @bt-impl
+          (fn [devices]
+            (let [device-list (into []
+                                    (map (fn [device]
+                                           {::object/id                (.-id device)
+                                            ::object/display-name      (.-name device)
+                                            ::scale-controller/address (.-address device)}))
+                                    devices)]
+              (rf/dispatch [::device-list-arrived device-list])))
+          (fn [error]
+            (js/alert (str "Unable to retrieve Bluetooth device list: " error))))))
+
+(rf/reg-event-fx
+ ::fetch-device-list
+ (fn [_ _]
+   {::fetch-device-list nil}))
 
 ;(def ^:private decoder (js/TextDecoder. "ascii"))
 

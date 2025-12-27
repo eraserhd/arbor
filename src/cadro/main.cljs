@@ -1,12 +1,14 @@
 (ns cadro.main
   (:require
+   [cadro.bluetooth :as bt]
    [cadro.db]
    [cadro.model.object]
    [cadro.model.locus]
    [cadro.ui.legend]
    [cadro.ui.locus]
    [clojure.spec.alpha :as s]
-   [reagent.dom.client :as rdc]))
+   [reagent.dom.client :as rdc]
+   [re-frame.core :as rf]))
 
 (defonce root (rdc/create-root (js/document.getElementById "app")))
 
@@ -19,4 +21,5 @@
   (when ^boolean goog.DEBUG
     (s/check-asserts true))
   (cadro.db/connect!)
+  (rf/dispatch [::bt/fetch-device-list])
   (rdc/render root [cadro]))
