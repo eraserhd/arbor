@@ -54,12 +54,14 @@
                    [:span.name display-name] " " [:span.address "(" address ")"]
                    (into [:ul.scales]
                          (map (fn [{:keys [::object/id
-                                           ::object/display-name]}]
+                                           ::object/display-name
+                                           ::scale/raw-value]}]
                                 [:li.scale
                                  [:input {:id (str id)
                                           :type "checkbox"}]
                                  [:label {:for (str id)}
-                                  [:span.name display-name]]]))
+                                  [:span.name display-name]
+                                  [:span.value raw-value]]]))
                          _device)]))
            @(re-posh/subscribe [::scales]))]))
 
