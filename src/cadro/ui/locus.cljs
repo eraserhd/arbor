@@ -50,10 +50,16 @@
                              ::scale-controller/address
                              ::scale/_device]}]
                   ^{:key (str id)}
-                  [:li.scale-controller display-name
+                  [:li.scale-controller
+                   [:span.name display-name] " " [:span.address "(" address ")"]
                    (into [:ul.scales]
-                         (map (fn [{:keys [::object/display-name]}]
-                                [:li.scale display-name]))
+                         (map (fn [{:keys [::object/id
+                                           ::object/display-name]}]
+                                [:li.scale
+                                 [:input {:id (str id)
+                                          :type "checkbox"}]
+                                 [:label {:for (str id)}
+                                  [:span.name display-name]]]))
                          _device)]))
            @(re-posh/subscribe [::scales]))]))
 
