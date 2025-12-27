@@ -35,16 +35,7 @@
 (re-posh/reg-event-ds
  ::device-list-arrived
  (fn [ds [_ device-list]]
-   (let [existing (->> (d/q '[:find [?addr ...]
-                              :where
-                              [?obj ::scale-controller/address ?addr]
-                              [?obj ::scale-controller/status ?status]]
-                            ds)
-                      (into #{}))]
-     (->> device-list
-          (map (fn [{:keys [::scale-controller/address], :as scale-controller}]
-                 (cond-> scale-controller
-                   (not (contains? existing address)) (assoc ::scale-controller/status :disconnected))))))))
+   (scale-controller/controller-list-arrived-tx ds device-list)))
 
 (rf/reg-fx
  ::fetch-device-list

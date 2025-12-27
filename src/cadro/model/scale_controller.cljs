@@ -4,7 +4,8 @@
    [cadro.model.object :as object]
    [clojure.set :as set]
    [clojure.spec.alpha :as s]
-   [clojure.string :as str]))
+   [clojure.string :as str]
+   [datascript.core :as d]))
 
 (db/register-schema!
  {::address {:db/cardinality :db.cardinality/one}
@@ -24,6 +25,19 @@
   [controller-id status]
   {:pre [(s/assert ::status status)]}
   [[:db/add controller-id ::status status]])
+
+(defn controller-list-arrived-tx
+  [ds device-list]
+  (let [existing (->> (d/q '[:find [?addr ...]
+                             :where
+                             [?obj ::address ?addr]
+                             [?obj ::status ?status]]
+                           ds)
+                     (into #{}))]
+    (->> device-list
+         (map (fn [{:keys [::address], :as scale-controller}]
+                (cond-> scale-controller
+                  (not (contains? existing address)) (assoc ::status :disconnected)))))))
 
 (defn data-received-tx
   [ds controller-id data]
