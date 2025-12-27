@@ -2,6 +2,9 @@
   (:require
    [cadro.db :as db]
    [cadro.model.locus :as locus]
+   [cadro.model.object :as object]
+   [cadro.model.scale-controller :as scale-controller]
+   [cadro.model.scale :as scale]
    [cljs.repl :refer [doc apropos source]]
    [datascript.core :as d]))
 
@@ -19,3 +22,7 @@
   "Retrieve and entity."
   [eid]
   (d/touch (d/entity @db/*conn* eid)))
+
+(defn pull
+  [selector eid]
+  (d/pull @db/*conn* selector eid))
