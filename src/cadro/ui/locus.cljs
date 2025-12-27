@@ -1,5 +1,6 @@
 (ns cadro.ui.locus
   (:require
+   [cadro.bluetooth :as bt]
    [cadro.model.object :as object]
    [cadro.model.scale :as scale]
    [cadro.model.scale-controller :as scale-controller]
@@ -22,7 +23,7 @@
   '[::object/id
     ::object/display-name
     ::scale-controller/address
-    ::scale-controller/connected?
+    ::scale-controller/status
     {::scale/_controller [::object/id
                           ::object/display-name
                           ::scale/raw-value]}])
@@ -49,13 +50,14 @@
            (map (fn [{:keys [::object/id
                              ::object/display-name
                              ::scale-controller/address
-                             ::scale-controller/connected?
+                             ::scale-controller/status
                              ::scale/_controller]}]
                   ^{:key (str id)}
                   [:li.scale-controller
                    [:span.name display-name] " " [:span.address "(" address ")"]
                    [:div.scales
-                    (if connected?
+                    (case status
+                      (:connected)
                       (into [:ul.scales]
                             (map (fn [{:keys [::object/id
                                               ::object/display-name
@@ -67,7 +69,16 @@
                                      [:span.name display-name]
                                      [:span.value raw-value]]]))
                             _controller)
-                      [:button.btn "Connect"])]]))
+
+                      (:disconnected)
+                      [:button.btn
+                       {:on-click #(rf/dispatch [::bt/connect [::object/id id]])}
+                       "Connect"]
+
+                      (:connecting)
+                      [:p "Connecting..."]
+
+                      [:p "Unknown status??"])]]))
            @(re-posh/subscribe [::scales]))]))
 
 (rf/reg-fx

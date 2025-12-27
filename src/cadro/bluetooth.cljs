@@ -2,6 +2,7 @@
   (:require
    [cadro.model.object :as object]
    [cadro.model.scale-controller :as scale-controller]
+   [datascript.core :as d]
    [re-posh.core :as re-posh]
    [re-frame.core :as rf]
    ["cordova-plugin-bluetooth-classic-serial-port/src/browser/bluetoothClassicSerial" :as bt-browser]))
@@ -34,7 +35,17 @@
 (re-posh/reg-event-ds
  ::device-list-arrived
  (fn [ds [_ device-list]]
-   device-list))
+   (let [existing (->> (d/q '[:find [?addr ...]
+                              :where
+                              [?obj ::scale-controller/address ?addr]
+                              [?obj ::scale-controller/status ?status]]
+                            ds)
+                      (into #{}))]
+     (prn :existing existing)
+     (->> device-list
+          (map (fn [{:keys [::scale-controller/address], :as scale-controller}]
+                 (cond-> scale-controller
+                   (not (contains? existing address)) (assoc ::scale-controller/status :disconnected))))))))
 
 (rf/reg-fx
  ::fetch-device-list
@@ -56,18 +67,33 @@
  (fn [_ _]
    {::fetch-device-list nil}))
 
+(re-posh/reg-event-ds
+ ::connecting
+ (fn [ds [_ device-id]]
+   [[:db/add device-id ::scale-controller/status :connecting]]))
+
+(re-posh/reg-event-ds
+ ::connected
+ (fn [ds [_ device-id]]
+   [[:db/add device-id ::scale-controller/status :connected]]))
+
+(re-posh/reg-event-ds
+ ::disconnected
+ (fn [ds [_ device-id]]
+   [[:db/add device-id ::scale-controller/status :disconnected]]))
+
 (def ^:private decoder (js/TextDecoder. "ascii"))
 
 (rf/reg-fx
  ::connect
  (fn connect* [device-id]
-   (rf/dispatch [::scale-controller/set-status device-id :connecting])
+   (rf/dispatch [::connecting device-id])
    (.connect
     @bt-impl
     device-id
     interface-id
     (fn []
-      (rf/dispatch [::scale-controller/set-status device-id :connected])
+      (rf/dispatch [::connected device-id])
       (.subscribeRawData
        @bt-impl
        device-id
@@ -79,7 +105,7 @@
          (rf/dispatch [::scale-controller/log-event device-id "subscribeRawData error" error]))))
     (fn [error]
       (rf/dispatch [::scale-controller/log-event device-id "connect error" error])
-      (rf/dispatch [::scale-controller/set-status device-id :disconnected])
+      (rf/dispatch [::disconnected device-id])
       (js/alert (str "Unable to connect: " error))))))
 
 (rf/reg-event-fx

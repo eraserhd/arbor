@@ -9,8 +9,11 @@
 
 (s/def ::address string?)
 (s/def ::connected? boolean?)
+(s/def ::status #{:disconnected
+                  :connecting
+                  :connected})
 
 (s/def ::scale-controller (s/keys :req [::object/id
                                         ::object/display-name
                                         ::address
-                                        ::connected?]))
+                                        ::status]))
