@@ -74,4 +74,5 @@
                 ^{:key (str dbid)}
                 [:li [legend-key dbid]])
            @(re-posh/subscribe [::loci-tree])))
-   [new-machine-button]])
+   [:div.controls
+    [new-machine-button]]])
