@@ -7,18 +7,22 @@
    [datascript.core :as d]))
 
 (deftest t-add-controllers
-  (let [conn      (d/create-conn (db/schema))
-        result-tx (scale-controller/add-controllers-tx @conn [{::object/display-name      "Nexus 7"
-                                                               ::scale-controller/address "00:00:01"}
-                                                              {::object/display-name      "HC-06"
-                                                               ::scale-controller/address "02:03:04"}])
-        _         (d/transact! conn result-tx)
-        pull      [::object/id
-                   ::object/display-name
-                   ::scale-controller/address
-                   ::scale-controller/status]
-        c1        (d/pull @conn pull [::scale-controller/address "00:00:01"])
-        c2        (d/pull @conn pull [::scale-controller/address "02:03:04"])]
+  (let [conn (d/create-conn (db/schema))
+        tx   (scale-controller/add-controllers-tx @conn [{::object/display-name      "Nexus 7"
+                                                          ::scale-controller/address "00:00:01"}
+                                                         {::object/display-name      "HC-06"
+                                                          ::scale-controller/address "02:03:04"}])
+        _    (d/transact! conn tx)
+        pull [::object/id
+              ::object/display-name
+              ::scale-controller/address
+              ::scale-controller/status]
+        c1   (d/pull @conn pull [::scale-controller/address "00:00:01"])
+        c2   (d/pull @conn pull [::scale-controller/address "02:03:04"])
+        tx2  (scale-controller/add-controllers-tx @conn [{::object/display-name       "Nexus 7 Renamed"
+                                                          ::scale-controller/address  "00:00:01"}])
+        _    (d/transact! conn tx2)
+        c1'  (d/pull @conn pull [::scale-controller/address "00:00:01"])]
     (is (= {::object/display-name "Nexus 7"
             ::scale-controller/address "00:00:01"
             ::scale-controller/status :disconnected}
@@ -32,4 +36,6 @@
     (is (uuid? (::object/id c1))
         "It creates a UUID for 'Nexus 7'.")
     (is (uuid? (::object/id c2))
-        "It creates a UUID for 'HC-06'.")))
+        "It creates a UUID for 'HC-06'.")
+    (is (= "Nexus 7 Renamed" (::object/display-name c1'))
+        "It updates a name when a new one is received.")))
