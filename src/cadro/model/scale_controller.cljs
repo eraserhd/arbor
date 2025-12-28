@@ -28,13 +28,13 @@
   [[:db/add controller-id ::status status]])
 
 (defn add-controllers-tx
-  [ds device-list]
+  [ds controller-list]
   (let [addr->controller (into {}
                                (map (juxt ::address identity))
                                (d/q '[:find (pull ?obj [::object/id ::address ::status])
                                       :where [?obj ::address]]
                                     ds))]
-    (->> device-list
+    (->> controller-list
          (map (fn [{:keys [::address], :as scale-controller}]
                 (let [{:keys [::object/id ::status]} (get addr->controller address)
                       new-status                     (or status :disconnected)
