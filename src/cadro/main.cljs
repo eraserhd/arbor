@@ -17,9 +17,14 @@
    [cadro.ui.legend/legend]
    [cadro.ui.locus/edit-panel]])
 
+(rf/reg-event-fx
+ ::initialize
+ (fn [_ _]
+   {::bt/fetch-device-list nil}))
+
 (defn ^:dev/after-load start []
   (when ^boolean goog.DEBUG
     (s/check-asserts true))
   (cadro.db/connect!)
-  (rf/dispatch [::bt/fetch-device-list])
+  (rf/dispatch-sync [::initialize])
   (rdc/render root [cadro]))

@@ -51,11 +51,6 @@
           (fn [error]
             (js/alert (str "Unable to retrieve Bluetooth device list: " error))))))
 
-(rf/reg-event-fx
- ::fetch-device-list
- (fn [_ _]
-   {::fetch-device-list nil}))
-
 (re-posh/reg-event-ds
  ::connect-requested
  (fn [ds [_ device-id]]
